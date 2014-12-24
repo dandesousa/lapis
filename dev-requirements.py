@@ -1,0 +1,11 @@
+Flask==0.10.1
+Jinja2==2.7.3
+Markdown==2.4.1
+MarkupSafe==0.23
+Pygments==1.6
+Werkzeug==0.9.6
+docopt==0.6.1
+grip==3.0.0
+itsdangerous==0.24
+path-and-address==1.0.0
+requests==2.3.0
