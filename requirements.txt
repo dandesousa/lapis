@@ -1,0 +1,2 @@
+pelican>=3.5.0
+SQLAlchemy==0.9.8

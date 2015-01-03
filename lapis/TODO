@@ -1,0 +1,4 @@
+- Use the pelican objects as a model
+- Enable commands to allow the creation of articles and pages
+- Enable commands to allow for the modification of articles and pages
+- Enable commands to allow for the deletion of articles and pages
