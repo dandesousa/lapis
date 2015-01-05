@@ -11,6 +11,7 @@ class Site(Base):
     __tablename__ = 'site'
     id = Column(Integer, primary_key=True)
     content_path = Column(String(PATH_LEN), nullable=False)
+    version = Column(Integer, nullable=False)
 
 
 content_tag_table = Table('content_tag', Base.metadata,

@@ -138,7 +138,16 @@ def main():
 
     from lapis.store import Store
     args.config.store = Store(args.config.lapis_db_path, args.config.content_path)
-    args.func(args)
-    #store.sync(settings)
-    #from pprint import pprint
-    #pprint(settings)
+    if args.config.store.schema_changed:
+        args.logger.info("migrating to new database format")
+        del args.config.store
+        os.remove(args.config.lapis_db_path)
+        args.config.store = Store(args.config.lapis_db_path, args.config.content_path)
+
+    # if we just created it, sync it, otherwise call the command
+    if args.config.store.created:
+        sync(args)
+        if args.func != sync:
+            args.func(args)
+    else:
+        args.func(args)

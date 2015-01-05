@@ -20,8 +20,10 @@ class Store(object):
     content on a site. it is responsible for caching data and ensuring that it
     can be accessed quickly.
     """
+    __version__ = 1
 
     def __init__(self, path, content_path):
+        self.__created = False
         conn_str = "sqlite:///" + path
         self.__engine = create_engine(conn_str)
         Base.metadata.create_all(self.__engine)
@@ -29,13 +31,24 @@ class Store(object):
         self.__session = sessionmaker(self.__engine)()
 
         if self.site is None:
-            site = Site(content_path = content_path)
+            self.__created = True
+            site = Site(content_path = content_path, version = Store.__version__)
             self.__session.add(site)
             self.__session.commit()
+
 
     def __del__(self):
         pass
         # self.__db.close()
+
+    @property
+    def created(self):
+        """returns true if the site db was just regenerated"""
+        return self.__created
+
+    @property
+    def schema_changed(self):
+        return self.site.version != Store.__version__
 
     @property
     def site(self):
@@ -127,6 +140,11 @@ class Store(object):
         for key in content_keys:
             for content in context[key]:
                 updated = self.__sync_content(content) or updated
+
+        if self.schema_changed:
+            site = self.site
+            site.version = Store.__version__
+            self.__session.commit()
 
         return updated
 
