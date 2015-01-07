@@ -18,6 +18,7 @@ content_tag_table = Table('content_tag', Base.metadata,
                           Column('content_id', Integer, ForeignKey('content.id')),
                           Column('tag_id', Integer, ForeignKey('tag.id')))
 
+
 class Content(Base):
     __tablename__ = 'content'
     id = Column(Integer, primary_key=True)
@@ -27,6 +28,11 @@ class Content(Base):
     tags = relationship('Tag', secondary=content_tag_table, backref="content_list")
     author_id = Column(Integer, ForeignKey('author.id'))
     author = relationship('Author', backref='content')
+    category_id = Column(Integer, ForeignKey('category.id'))
+    category = relationship('Category', backref='content')
+
+    def __repr__(self):
+        return "Content(title='{}', type='{}', author='{}', category='{}', tags='{}')".format(self.title, self.type, self.author, self.category, self.tags)
 
 
 class Tag(Base):
@@ -34,14 +40,23 @@ class Tag(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String())
 
+    def __repr__(self):
+        return self.name
+
 
 class Category(Base):
     __tablename__ = 'category'
     id = Column(Integer, primary_key=True)
     name = Column(String())
 
+    def __repr__(self):
+        return self.name
+
 
 class Author(Base):
     __tablename__ = 'author'
     id = Column(Integer, primary_key=True)
     name = Column(String())
+
+    def __repr__(self):
+        return self.name
