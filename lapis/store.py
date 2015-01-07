@@ -5,11 +5,10 @@
 """defines the lapis store which is used to perform fast searches and lookups"""
 
 import logging
-import os
-from pelican.readers import Readers
 from lapis.models import Base, Content, Site, Tag
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql.expression import ClauseElement
 
 
 logger = logging.getLogger(__name__)
@@ -32,10 +31,9 @@ class Store(object):
 
         if self.site is None:
             self.__created = True
-            site = Site(content_path = content_path, version = Store.__version__)
+            site = Site(content_path=content_path, version=Store.__version__)
             self.__session.add(site)
             self.__session.commit()
-
 
     def __del__(self):
         pass
@@ -62,17 +60,17 @@ class Store(object):
         """
         pass
 
-    def __get_or_add_tags(self, tags):
-        """Given Tag urlwrappers, will add them."""
-        ret_list = []
-        for tag in tags:
-            db_tag = self.__session.query(Tag).filter(Tag.name == tag.name).first()
-            if db_tag is None:
-                db_tag = Tag(name=tag.name)
-                self.__session.add(db_tag)
-                self.__session.commit()
-            ret_list.append(db_tag)
-        return ret_list
+    def get_or_create(self, model, defaults=None, **kwargs):
+        instance = self.__session.query(model).filter_by(**kwargs).first()
+        if instance:
+            return instance, False
+        else:
+            params = dict((k, v) for k, v in kwargs.items() if not isinstance(v, ClauseElement))
+            params.update(defaults or {})
+            instance = model(**params)
+            self.__session.add(instance)
+            self.__session.commit()
+            return instance, True
 
     def __get_content_type(self, content):
         """returns the enum representing the type of content parsed"""
@@ -81,7 +79,6 @@ class Store(object):
         if cls == Article:
             return "article"
         return "page"
-
 
     def __sync_content(self, content):
         """syncs content with the database by either updating an existing
@@ -93,7 +90,8 @@ class Store(object):
         updated = False
         db_content = self.__session.query(Content).filter(Content.source_path == content.source_path).first()
         if db_content is None:
-            tags = self.__get_or_add_tags(getattr(content, "tags", []))
+            tag_list = getattr(content, "tags", [])
+            tags = [self.get_or_create(Tag, name=tag.name)[0] for tag in tag_list]
             content_type = self.__get_content_type(content)
             content = Content(source_path=content.source_path, title=content.title, tags=tags, type=content_type)
             self.__session.add(content)
