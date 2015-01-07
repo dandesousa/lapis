@@ -99,7 +99,7 @@ def find(args):
     content_list = args.config.store.search()
 
     def print_title(content):
-        print("{} -- {} ({})".format(content.type, content.title, ", ".join(["({}) {}".format(tag.id, tag.name) for tag in content.tags])))
+        print("{} -- {} by {} ({})".format(content.type, content.title, content.author.name, ", ".join(["({}) {}".format(tag.id, tag.name) for tag in content.tags])))
 
     def print_path(content):
         print(content.path)

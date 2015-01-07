@@ -5,7 +5,7 @@
 """defines the lapis store which is used to perform fast searches and lookups"""
 
 import logging
-from lapis.models import Base, Content, Site, Tag
+from lapis.models import Base, Content, Site, Tag, Author
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import ClauseElement
@@ -92,12 +92,13 @@ class Store(object):
         if db_content is None:
             tag_list = getattr(content, "tags", [])
             tags = [self.get_or_create(Tag, name=tag.name)[0] for tag in tag_list]
+            author = self.get_or_create(Author, name=content.author.name)[0]
             content_type = self.__get_content_type(content)
-            content = Content(source_path=content.source_path, title=content.title, tags=tags, type=content_type)
+            content = Content(source_path=content.source_path, title=content.title, tags=tags, type=content_type, author=author)
             self.__session.add(content)
             self.__session.commit()  # TODO: This might be sub-optimal, we can maybe commit after all the adds?
             updated = True
-        elif db_content.title != content.title:
+        elif db_content.title != content.title:  # TODO: needs to update if any attribute or sub-attribute changes
             db_content.title = content.title
             self.__session.commit()
             updated = True

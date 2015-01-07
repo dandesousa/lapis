@@ -25,6 +25,8 @@ class Content(Base):
     title = Column(String(), index=True)
     type = Column(Enum('page', 'article'), nullable=False)
     tags = relationship('Tag', secondary=content_tag_table, backref="content_list")
+    author_id = Column(Integer, ForeignKey('author.id'))
+    author = relationship('Author', backref='content')
 
 
 class Tag(Base):
