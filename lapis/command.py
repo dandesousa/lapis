@@ -20,6 +20,7 @@ def _setup_find_args(sp):
     """
     parser = sp.add_parser("find", help="finds articles, posts or other content.")
     parser.add_argument("-p", "--path", default=False, action="store_true", help="If given, shows the path instead of the title of the content")
+    parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
     parser.set_defaults(func=find)
     sub = parser.add_subparsers()
 
@@ -96,7 +97,7 @@ def invalid_command(args):
 
 def find(args):
     args.logger.info("finding content that matches the criteria")
-    content_list = args.config.store.search()
+    content_list = args.config.store.search(tags=args.tags)
 
     def print_title(content):
         print(content)

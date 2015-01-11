@@ -154,11 +154,19 @@ class Store(object):
         this function searches the available metadata for a matching object and
         generates properly constructed content objects that match those criteria.
 
+        :param tags list: returns content that is the logical conjuction of these tags
+
         :yields object: The type of content object constrained by search parameters.
         """
         # TODO: Any way to determine if file system has changed so we can
         # resync?
 
         articles = self.__session.query(Content)
+        tags = kwargs.get("tags", [])
+
+        # filters by the articles matching all the tags
+        if tags:
+            articles = articles.filter(*[Content.tags.any(Tag.name == tag) for tag in tags])
+
         for content in articles:
             yield content
