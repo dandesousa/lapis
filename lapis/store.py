@@ -154,6 +154,7 @@ class Store(object):
         this function searches the available metadata for a matching object and
         generates properly constructed content objects that match those criteria.
 
+        :param category str: the category that the content must match.
         :param content_type enum: either article, page or None to filter by content type.
         :param tags list: returns content that is the logical conjuction of these tags
 
@@ -168,6 +169,11 @@ class Store(object):
         content_type = kwargs.get("content_type", None)
         if content_type in ("article", "page"):
             articles = articles.filter(Content.type == content_type)
+
+        # filters by the category
+        category = kwargs.get("category", None)
+        if category:
+            articles = articles.filter(Content.category.has(Category.name == category))
 
         # filters by the articles matching all the tags
         tags = kwargs.get("tags", [])
