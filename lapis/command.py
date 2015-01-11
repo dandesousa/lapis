@@ -19,8 +19,11 @@ def _setup_find_args(sp):
     :param sp object: subparsers special action object in argparse used to add sub-commands
     """
     parser = sp.add_parser("find", help="finds articles, posts or other content.")
-    parser.add_argument("-p", "--path", default=False, action="store_true", help="If given, shows the path instead of the title of the content")
-    parser.add_argument("-a", "--articles", default=False, action="store_true", help="Restricts the list of returned content to articles.")
+    # TODO: this will go away eventually
+    parser.add_argument("--path", default=False, action="store_true", help="If given, shows the path instead of the title of the content")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-a", "--articles", default=False, action="store_true", help="Restricts the list of returned content to articles.")
+    group.add_argument("-p", "--pages", default=False, action="store_true", help="Restricts the list of returned content to pages.")
     parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
     parser.set_defaults(func=find)
     sub = parser.add_subparsers()
