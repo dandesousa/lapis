@@ -19,8 +19,8 @@ def _setup_find_args(sp):
     :param sp object: subparsers special action object in argparse used to add sub-commands
     """
     parser = sp.add_parser("find", help="finds articles, posts or other content.")
-    # TODO: this will go away eventually
-    parser.add_argument("title", nargs="?", default=None, help="case-insensitive search by the title")
+    parser.add_argument("title", nargs="?", default=None, type=str, help="case-insensitive search by the title")
+    # TODO: path this will go away eventually
     parser.add_argument("--path", default=False, action="store_true", help="If given, shows the path instead of the title of the content")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-a", "--articles", default=False, action="store_true", help="Restricts the list of returned content to articles.")
@@ -29,7 +29,6 @@ def _setup_find_args(sp):
     parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
     parser.add_argument("-w", "--author", default=None, type=str, help="The author that the content must have")
     parser.set_defaults(func=find)
-    sub = parser.add_subparsers()
 
 def _setup_sync_args(sp):
     """add arguments and commands for creating content
