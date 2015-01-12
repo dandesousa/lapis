@@ -26,6 +26,7 @@ def _setup_find_args(sp):
     group.add_argument("-p", "--pages", default=False, action="store_true", help="Restricts the list of returned content to pages.")
     parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
     parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
+    parser.add_argument("-w", "--author", default=None, type=str, help="The author that the content must have")
     parser.set_defaults(func=find)
     sub = parser.add_subparsers()
 
@@ -105,7 +106,8 @@ def find(args):
     content_type = None
     if args.articles:
         content_type = "article"
-    content_list = args.config.store.search(category=args.category,
+    content_list = args.config.store.search(author=args.author,
+                                            category=args.category,
                                             tags=args.tags,
                                             content_type=content_type)
 

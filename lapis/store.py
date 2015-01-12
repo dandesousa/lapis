@@ -154,9 +154,10 @@ class Store(object):
         this function searches the available metadata for a matching object and
         generates properly constructed content objects that match those criteria.
 
+        :param author str: the author that the content must match.
         :param category str: the category that the content must match.
         :param content_type enum: either article, page or None to filter by content type.
-        :param tags list: returns content that is the logical conjuction of these tags
+        :param tags list: returns content that is the logical conjuction of these tags.
 
         :yields object: The type of content object constrained by search parameters.
         """
@@ -164,6 +165,11 @@ class Store(object):
         # resync?
 
         articles = self.__session.query(Content)
+
+        # filters by the author of the content
+        author = kwargs.get("author", None)
+        if author:
+            articles = articles.filter(Content.author.has(Author.name == author))
 
         # filters by the type of content
         content_type = kwargs.get("content_type", None)
