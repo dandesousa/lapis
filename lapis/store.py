@@ -158,6 +158,7 @@ class Store(object):
         :param category str: the category that the content must match.
         :param content_type enum: either article, page or None to filter by content type.
         :param tags list: returns content that is the logical conjuction of these tags.
+        :param title str: title to search content by, produces a filter by case-insensitive match.
 
         :yields object: The type of content object constrained by search parameters.
         """
@@ -185,6 +186,12 @@ class Store(object):
         tags = kwargs.get("tags", [])
         if tags:
             articles = articles.filter(*[Content.tags.any(Tag.name == tag) for tag in tags])
+
+        # filters by the title, case-insensitive
+        title = kwargs.get("title", None)
+        if title:
+            lc_title = title.lower()
+            articles = articles.filter(Content.title.like("%{}%".format(lc_title)))
 
         for content in articles:
             yield content

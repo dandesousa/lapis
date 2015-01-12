@@ -20,6 +20,7 @@ def _setup_find_args(sp):
     """
     parser = sp.add_parser("find", help="finds articles, posts or other content.")
     # TODO: this will go away eventually
+    parser.add_argument("title", default=None, help="case-insensitive search by the title")
     parser.add_argument("--path", default=False, action="store_true", help="If given, shows the path instead of the title of the content")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-a", "--articles", default=False, action="store_true", help="Restricts the list of returned content to articles.")
@@ -107,6 +108,7 @@ def find(args):
     if args.articles:
         content_type = "article"
     content_list = args.config.store.search(author=args.author,
+                                            title=args.title,
                                             category=args.category,
                                             tags=args.tags,
                                             content_type=content_type)
