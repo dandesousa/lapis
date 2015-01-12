@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Table, Enum
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, Enum, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 # from sqlalchemy import create_engine
@@ -24,6 +24,7 @@ class Content(Base):
     id = Column(Integer, primary_key=True)
     source_path = Column(String(PATH_LEN), nullable=False, unique=True, index=True)
     title = Column(String(), index=True)
+    date_created = Column(DateTime())
     type = Column(Enum('page', 'article'), nullable=False)
     tags = relationship('Tag', secondary=content_tag_table, backref="content_list")
     author_id = Column(Integer, ForeignKey('author.id'))
@@ -32,7 +33,7 @@ class Content(Base):
     category = relationship('Category', backref='content')
 
     def __repr__(self):
-        return "Content(title='{}', type='{}', author='{}', category='{}', tags='{}')".format(self.title, self.type, self.author, self.category, self.tags)
+        return "Content(title='{}', date_created='{}', type='{}', author='{}', category='{}', tags='{}')".format(self.title, self.date_created, self.type, self.author, self.category, self.tags)
 
 
 class Tag(Base):

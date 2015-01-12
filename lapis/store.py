@@ -95,7 +95,8 @@ class Store(object):
             author = self.get_or_create(Author, name=content.author.name)[0]
             category = self.get_or_create(Category, name=content.category.name)[0]
             content_type = self.__get_content_type(content)
-            content = Content(source_path=content.source_path, title=content.title, tags=tags, type=content_type, author=author, category=category)
+            date_created = content.date
+            content = Content(source_path=content.source_path, date_created=date_created, title=content.title, tags=tags, type=content_type, author=author, category=category)
             self.__session.add(content)
             self.__session.commit()  # TODO: This might be sub-optimal, we can maybe commit after all the adds?
             updated = True
