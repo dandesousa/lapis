@@ -149,6 +149,32 @@ class Store(object):
 
         return updated
 
+    def tags(self, pattern, order_by="name"):
+        """fetches the list of tags which match the given pattern
+
+        :param pattern str: regular expression which returns the tags which match the pattern.
+        :param order_by str: choice of ['name', 'content']
+
+        :yields Tag: the tag that matches the pattern
+        """
+        import re
+
+        pattern = re.compile(pattern)
+        order_by_prop = Tag.name
+        tags = self.__session.query(Tag)
+
+        # TODO: might be a way to more efficiently query here, by foreign key
+        # length??
+
+        if order_by == "content":
+            tags = sorted(tags, key=lambda x: -len(x.content))
+        else:
+            tags = tags.order_by(order_by_prop)
+
+        for tag in tags:
+            if pattern.search(tag.name):
+                yield tag
+
     def search(self, **kwargs):
         """searches available metadata and files for the given search criteria
 

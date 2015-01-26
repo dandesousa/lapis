@@ -60,6 +60,14 @@ def _setup_create_page_args(sp):
     parser = sp.add_parser("page", help=help_txt, description=help_txt)
 
 
+def _setup_list_tags_args(sp):
+    help_txt = "lists existing tags"
+    parser = sp.add_parser("tags", help=help_txt, description=help_txt)
+    parser.add_argument("pattern", nargs="?", default="", type=str, help="regex pattern to match to find existing tags")
+    parser.add_argument("-c", "--order_by_count", default=False, action="store_true", help="Orders by number of instances instead of name")
+    parser.set_defaults(func=list_tags)
+
+
 def _parse_args():
     """parses the command arguments"""
     parser = ArgumentParser(prog=PROG, description="Utility for performing common pelican tasks.")
@@ -72,6 +80,7 @@ def _parse_args():
     _setup_sync_args(subparsers)
     _setup_find_args(subparsers)
     _setup_create_args(subparsers)
+    _setup_list_tags_args(subparsers)
 
     # TODO: additional sub-commands go here
 
@@ -133,6 +142,15 @@ def sync(args):
         args.logger.info("updated metadata for files")
     else:
         args.logger.info("no change in content -- metadata was not updated")
+
+
+def list_tags(args):
+    args.logger.info("listing all the tags")
+    order_by = "name"
+    if args.order_by_count:
+        order_by = "content"
+    for tag in args.config.store.tags(args.pattern, order_by=order_by):
+        print("{} [{}]".format(tag.name, len(tag.content)))
 
 
 def main():

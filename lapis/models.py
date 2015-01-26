@@ -26,7 +26,7 @@ class Content(Base):
     title = Column(String(), index=True)
     date_created = Column(DateTime())
     type = Column(Enum('page', 'article'), nullable=False)
-    tags = relationship('Tag', secondary=content_tag_table, backref="content_list")
+    tags = relationship('Tag', secondary=content_tag_table, backref="content")
     author_id = Column(Integer, ForeignKey('author.id'))
     author = relationship('Author', backref='content')
     category_id = Column(Integer, ForeignKey('category.id'))
