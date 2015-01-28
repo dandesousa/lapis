@@ -11,10 +11,10 @@ import sys
 
 
 logger = logging.getLogger(__name__)
-PROG = "lapis"
 
 
 class Command(object):
+    """Base class used for grouping commands and their function"""
 
     def __init__(self, *args, **kwargs):
         raise RuntimeError("may not instantiate an instance of a Command object")
@@ -37,7 +37,7 @@ class Command(object):
         raise NotImplemented
 
     @staticmethod
-    def run(args):
+    def run(*args, **kwargs):
         """the command that should be run when the subcommand is invoked"""
         raise NotImplemented
 
@@ -60,13 +60,20 @@ class FindCommand(Command):
         parser.add_argument("-w", "--author", default=None, type=str, help="The author that the content must have")
 
     @staticmethod
-    def run(args):
+    def run(*args, **kwargs):
+        config = kwargs["config"]
+        articles = kwargs.get("articles", False)
+        author = kwargs["author"]
+        title = kwargs["title"]
+        category = kwargs["category"]
+        tags = kwargs["tags"]
+        path = kwargs["path"]
+
         logger.info("finding content that matches the criteria")
         content_type = None
-        if args.articles:
+        if articles:
             content_type = "article"
-        content_list = args.config.store.search(author=args.author, title=args.title, category=args.category,
-                                                tags=args.tags, content_type=content_type)
+        content_list = config.store.search(author=author, title=title, category=category, tags=tags, content_type=content_type)
 
         def print_title(content):
             print(content)
@@ -75,7 +82,7 @@ class FindCommand(Command):
             print(content.path)
 
         print_func = print_title
-        if args.path:
+        if path:
             print_func = print_path
 
         for content in content_list:
@@ -91,9 +98,10 @@ class SyncCommand(Command):
         pass
 
     @staticmethod
-    def run(args):
+    def run(*args, **kwargs):
+        config = kwargs["config"]
         logger.info("syncing with local content directory")
-        updated = args.config.store.sync(args.config.settings)
+        updated = config.store.sync(config.settings)
         if updated:
             logger.info("updated metadata for files")
         else:
@@ -110,18 +118,21 @@ class ListTagsCommand(Command):
         parser.add_argument("-c", "--order_by_count", default=False, action="store_true", help="Orders by number of instances instead of name")
 
     @staticmethod
-    def run(args):
+    def run(*args, **kwargs):
+        config = kwargs["config"]
+        order_by_count = kwargs["order_by_count"]
+        pattern = kwargs["pattern"]
         logger.info("listing all the tags")
         order_by = "name"
-        if args.order_by_count:
+        if order_by_count:
             order_by = "content"
-        for tag in args.config.store.tags(args.pattern, order_by=order_by):
+        for tag in config.store.tags(pattern, order_by=order_by):
             print("{} [{}]".format(tag.name, len(tag.content)))
 
 
 def _parse_args():
     """parses the command arguments"""
-    parser = ArgumentParser(prog=PROG, description="Utility for performing common pelican tasks.")
+    parser = ArgumentParser(prog="lapis", description="Utility for performing common pelican tasks.")
     parser.add_argument("-v", "--verbose", default=0, action="count", help="logging verbosity (more gives additional details)")
     parser.add_argument("-c", "--pelican_config", default=os.path.join(os.curdir, "pelicanconf.py"), help="path to the pelican configuration file used by blog (default: %(default)s)")
     parser.add_argument("--db_name", default=".lapisdb", help="The name of the lapis db file used for caching, stored in the pelican site's root directory (default: %(default)s)")
@@ -181,10 +192,11 @@ def main():
         args.config.store = Store(args.config.lapis_db_path, args.config.content_path)
 
     # if we just created it, sync it, otherwise call the command
+    kwargs = {key: value for key, value in args.__dict__.items()}
     if args.config.store.created:
         # TODO: classmethods here?
-        SyncCommand.run(args)
+        SyncCommand.run(**kwargs)
         if args.func != SyncCommand.run:
-            args.func(args)
+            args.func(**kwargs)
     else:
-        args.func(args)
+        args.func(**kwargs)
