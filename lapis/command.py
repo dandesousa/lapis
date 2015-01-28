@@ -117,7 +117,7 @@ class ListCommand(Command):
     def args(parser):
         parser.add_argument("pattern", nargs="?", default="", type=str, help="regex pattern to match againt the name")
         parser.add_argument("-c", "--order_by_count", default=False, action="store_true", help="Orders by number of instances instead of name")
-
+        parser.add_argument("-r", "--reverse", default=False, action="store_true", help="Reverses the standard order in which items are displayed")
 
     @staticmethod
     def list_and_print(*args, **kwargs):
@@ -125,9 +125,14 @@ class ListCommand(Command):
         config = kwargs["config"]
         pattern = kwargs.get("pattern", "")
         order_by_count = kwargs.get("order_by_count", False)
-
+        reverse = kwargs.get("reverse", False)
         order_by = "content" if order_by_count else "name"
-        for obj in config.store.list(pattern, order_by=order_by, cls=model):
+        items = config.store.list(pattern, order_by=order_by, cls=model)
+        if reverse:
+            items = list(items)
+            items.reverse()
+
+        for obj in items:
             print("{} [{}]".format(obj.name, len(obj.content)))
 
 
@@ -151,10 +156,21 @@ class ListAuthorsCommand(ListCommand):
         ListCommand.list_and_print(Author, *args, **kwargs)
 
 
+class ListCategoriesCommand(ListCommand):
+    __command__ = "categories"
+    __help__ = "lists existing categoriess on your pelican site"
+
+    @staticmethod
+    def run(*args, **kwargs):
+        from lapis.models import Category
+        ListCommand.list_and_print(Category, *args, **kwargs)
+
+
 sub_command_classes = (FindCommand,
                        SyncCommand,
                        ListTagsCommand,
-                       ListAuthorsCommand)
+                       ListAuthorsCommand,
+                       ListCategoriesCommand)
 
 
 def _parse_args():
