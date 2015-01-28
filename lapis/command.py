@@ -10,6 +10,7 @@ import os
 import sys
 
 
+logger = logging.getLogger(__name__)
 PROG = "lapis"
 
 
@@ -93,10 +94,7 @@ def _parse_args():
     else:
         level = logging.WARNING
 
-    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s")
-    logger = logging.getLogger(PROG)
-    logger.setLevel(level)
-    args.logger = logger
+    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s", level=level)
 
     # catch-all for unset function
     args._parser = parser
@@ -111,7 +109,7 @@ def invalid_command(args):
 
 
 def find(args):
-    args.logger.info("finding content that matches the criteria")
+    logger.info("finding content that matches the criteria")
     content_type = None
     if args.articles:
         content_type = "article"
@@ -136,16 +134,16 @@ def find(args):
 
 
 def sync(args):
-    args.logger.info("syncing with local content directory")
+    logger.info("syncing with local content directory")
     updated = args.config.store.sync(args.config.settings)
     if updated:
-        args.logger.info("updated metadata for files")
+        logger.info("updated metadata for files")
     else:
-        args.logger.info("no change in content -- metadata was not updated")
+        logger.info("no change in content -- metadata was not updated")
 
 
 def list_tags(args):
-    args.logger.info("listing all the tags")
+    logger.info("listing all the tags")
     order_by = "name"
     if args.order_by_count:
         order_by = "content"
@@ -157,7 +155,7 @@ def main():
     args = _parse_args()
 
     if not os.path.isfile(args.pelican_config):
-        args.logger.error("Expected pelican configuration file at '{}', setup config or override with -c, --pelican_config".format(args.pelican_config))
+        logger.error("Expected pelican configuration file at '{}', setup config or override with -c, --pelican_config".format(args.pelican_config))
         sys.exit(1)
 
     args.config = type("Config", (object,), {})
@@ -171,7 +169,7 @@ def main():
     from lapis.store import Store
     args.config.store = Store(args.config.lapis_db_path, args.config.content_path)
     if args.config.store.schema_changed:
-        args.logger.info("migrating to new database format")
+        logger.info("migrating to new database format")
         del args.config.store
         os.remove(args.config.lapis_db_path)
         args.config.store = Store(args.config.lapis_db_path, args.config.content_path)
