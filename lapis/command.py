@@ -17,11 +17,12 @@ class Command(object):
     """Base class used for grouping commands and their function"""
 
     def __init__(self, *args, **kwargs):
+        """not intended to be implemented by child classes"""
         raise RuntimeError("may not instantiate an instance of a Command object")
 
     @classmethod
     def setup(cls, subparser):
-        """sets up an instance of the command"""
+        """sets up an instance of the command by calling args setup and setting the run method"""
         # creates the parser for options
         parser = subparser.add_parser(cls.__command__, help=cls.__help__)
 
@@ -33,14 +34,13 @@ class Command(object):
 
     @staticmethod
     def args(parser):
-        """adds the arguments to the parser that should be invoked when the command is created"""
+        """adds the arguments to the parser that should be invoked when the command is created, overrides should be staticmethods"""
         raise NotImplemented
 
     @staticmethod
     def run(*args, **kwargs):
-        """the command that should be run when the subcommand is invoked"""
+        """the command that should be run when the subcommand is invoked, overriddes should be staticmethods"""
         raise NotImplemented
-
 
 
 class FindCommand(Command):
@@ -61,13 +61,17 @@ class FindCommand(Command):
 
     @staticmethod
     def run(*args, **kwargs):
+        """finds the content in the store that matches the criteria.
+
+        :param config Config:  TODO
+        """
         config = kwargs["config"]
         articles = kwargs.get("articles", False)
-        author = kwargs["author"]
-        title = kwargs["title"]
-        category = kwargs["category"]
-        tags = kwargs["tags"]
-        path = kwargs["path"]
+        author = kwargs.get("author", None)
+        category = kwargs.get("category", None)
+        path = kwargs.get("path", False)
+        tags = kwargs.get("tags", [])
+        title = kwargs.get("title", "")
 
         logger.info("finding content that matches the criteria")
         content_type = None
@@ -120,8 +124,9 @@ class ListTagsCommand(Command):
     @staticmethod
     def run(*args, **kwargs):
         config = kwargs["config"]
-        order_by_count = kwargs["order_by_count"]
-        pattern = kwargs["pattern"]
+        order_by_count = kwargs.get("order_by_count", False)
+        pattern = kwargs.get("pattern", "")
+
         logger.info("listing all the tags")
         order_by = "name"
         if order_by_count:
@@ -194,7 +199,6 @@ def main():
     # if we just created it, sync it, otherwise call the command
     kwargs = {key: value for key, value in args.__dict__.items()}
     if args.config.store.created:
-        # TODO: classmethods here?
         SyncCommand.run(**kwargs)
         if args.func != SyncCommand.run:
             args.func(**kwargs)
