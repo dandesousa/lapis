@@ -14,59 +14,109 @@ logger = logging.getLogger(__name__)
 PROG = "lapis"
 
 
-def _setup_find_args(sp):
-    """add arguments and commands for creating content
+class Command(object):
 
-    :param sp object: subparsers special action object in argparse used to add sub-commands
-    """
-    parser = sp.add_parser("find", help="finds articles, posts or other content.")
-    parser.add_argument("title", nargs="?", default=None, type=str, help="case-insensitive search by the title")
-    # TODO: path this will go away eventually
-    parser.add_argument("--path", default=False, action="store_true", help="If given, shows the path instead of the title of the content")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("-a", "--articles", default=False, action="store_true", help="Restricts the list of returned content to articles.")
-    group.add_argument("-p", "--pages", default=False, action="store_true", help="Restricts the list of returned content to pages.")
-    parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
-    parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
-    parser.add_argument("-w", "--author", default=None, type=str, help="The author that the content must have")
-    parser.set_defaults(func=find)
+    def __init__(self, *args, **kwargs):
+        raise RuntimeError("may not instantiate an instance of a Command object")
 
-def _setup_sync_args(sp):
-    """add arguments and commands for creating content
+    @classmethod
+    def setup(cls, subparser):
+        """sets up an instance of the command"""
+        # creates the parser for options
+        parser = subparser.add_parser(cls.__command__, help=cls.__help__)
 
-    :param sp object: subparsers special action object in argparse used to add sub-commands
-    """
-    parser = sp.add_parser("sync", help="syncs the local lapis store with the content directory")
-    parser.set_defaults(func=sync)
-    sub = parser.add_subparsers()
+        # adds the arguments
+        cls.args(parser)
 
-def _setup_create_args(sp):
-    """add arguments and commands for creating content
+        # sets the default function to invoke
+        parser.set_defaults(func=cls.run)
 
-    :param sp object: subparsers special action object in argparse used to add sub-commands
-    """
-    parser = sp.add_parser("create", help="creates new content")
-    sub = parser.add_subparsers()
-    _setup_create_post_args(sub)
-    _setup_create_page_args(sub)
+    @staticmethod
+    def args(parser):
+        """adds the arguments to the parser that should be invoked when the command is created"""
+        raise NotImplemented
+
+    @staticmethod
+    def run(args):
+        """the command that should be run when the subcommand is invoked"""
+        raise NotImplemented
 
 
-def _setup_create_post_args(sp):
-    help_txt = "creates a new post"
-    parser = sp.add_parser("post", help=help_txt, description=help_txt)
+
+class FindCommand(Command):
+    __command__ = "find"
+    __help__ = "finds articles, posts or other content"
+
+    @staticmethod
+    def args(parser):
+        parser.add_argument("title", nargs="?", default=None, type=str, help="case-insensitive search by the title")
+        # TODO: path this will go away eventually
+        parser.add_argument("--path", default=False, action="store_true", help="If given, shows the path instead of the title of the content")
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument("-a", "--articles", default=False, action="store_true", help="Restricts the list of returned content to articles.")
+        group.add_argument("-p", "--pages", default=False, action="store_true", help="Restricts the list of returned content to pages.")
+        parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
+        parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
+        parser.add_argument("-w", "--author", default=None, type=str, help="The author that the content must have")
+
+    @staticmethod
+    def run(args):
+        logger.info("finding content that matches the criteria")
+        content_type = None
+        if args.articles:
+            content_type = "article"
+        content_list = args.config.store.search(author=args.author, title=args.title, category=args.category,
+                                                tags=args.tags, content_type=content_type)
+
+        def print_title(content):
+            print(content)
+
+        def print_path(content):
+            print(content.path)
+
+        print_func = print_title
+        if args.path:
+            print_func = print_path
+
+        for content in content_list:
+            print_func(content)
 
 
-def _setup_create_page_args(sp):
-    help_txt = "creates a new page"
-    parser = sp.add_parser("page", help=help_txt, description=help_txt)
+class SyncCommand(Command):
+    __command__ = "sync"
+    __help__ = "syncs the local lapis store with the content directory"
+
+    @staticmethod
+    def args(parser):
+        pass
+
+    @staticmethod
+    def run(args):
+        logger.info("syncing with local content directory")
+        updated = args.config.store.sync(args.config.settings)
+        if updated:
+            logger.info("updated metadata for files")
+        else:
+            logger.info("no change in content -- metadata was not updated")
 
 
-def _setup_list_tags_args(sp):
-    help_txt = "lists existing tags"
-    parser = sp.add_parser("tags", help=help_txt, description=help_txt)
-    parser.add_argument("pattern", nargs="?", default="", type=str, help="regex pattern to match to find existing tags")
-    parser.add_argument("-c", "--order_by_count", default=False, action="store_true", help="Orders by number of instances instead of name")
-    parser.set_defaults(func=list_tags)
+class ListTagsCommand(Command):
+    __command__ = "tags"
+    __help__ = "lists existing tags on your pelican site"
+
+    @staticmethod
+    def args(parser):
+        parser.add_argument("pattern", nargs="?", default="", type=str, help="regex pattern to match to find existing tags")
+        parser.add_argument("-c", "--order_by_count", default=False, action="store_true", help="Orders by number of instances instead of name")
+
+    @staticmethod
+    def run(args):
+        logger.info("listing all the tags")
+        order_by = "name"
+        if args.order_by_count:
+            order_by = "content"
+        for tag in args.config.store.tags(args.pattern, order_by=order_by):
+            print("{} [{}]".format(tag.name, len(tag.content)))
 
 
 def _parse_args():
@@ -76,12 +126,11 @@ def _parse_args():
     parser.add_argument("-c", "--pelican_config", default=os.path.join(os.curdir, "pelicanconf.py"), help="path to the pelican configuration file used by blog (default: %(default)s)")
     parser.add_argument("--db_name", default=".lapisdb", help="The name of the lapis db file used for caching, stored in the pelican site's root directory (default: %(default)s)")
 
+    sub_command_classes = (FindCommand, SyncCommand, ListTagsCommand)
     # sub-commands
     subparsers = parser.add_subparsers()
-    _setup_sync_args(subparsers)
-    _setup_find_args(subparsers)
-    _setup_create_args(subparsers)
-    _setup_list_tags_args(subparsers)
+    for command_cls in sub_command_classes:
+        command_cls.setup(subparsers)
 
     # TODO: additional sub-commands go here
 
@@ -106,49 +155,6 @@ def _parse_args():
 
 def invalid_command(args):
     args._parser.error("Must select a valid lapis command.")
-
-
-def find(args):
-    logger.info("finding content that matches the criteria")
-    content_type = None
-    if args.articles:
-        content_type = "article"
-    content_list = args.config.store.search(author=args.author,
-                                            title=args.title,
-                                            category=args.category,
-                                            tags=args.tags,
-                                            content_type=content_type)
-
-    def print_title(content):
-        print(content)
-
-    def print_path(content):
-        print(content.path)
-
-    print_func = print_title
-    if args.path:
-        print_func = print_path
-
-    for content in content_list:
-        print_func(content)
-
-
-def sync(args):
-    logger.info("syncing with local content directory")
-    updated = args.config.store.sync(args.config.settings)
-    if updated:
-        logger.info("updated metadata for files")
-    else:
-        logger.info("no change in content -- metadata was not updated")
-
-
-def list_tags(args):
-    logger.info("listing all the tags")
-    order_by = "name"
-    if args.order_by_count:
-        order_by = "content"
-    for tag in args.config.store.tags(args.pattern, order_by=order_by):
-        print("{} [{}]".format(tag.name, len(tag.content)))
 
 
 def main():
@@ -176,8 +182,9 @@ def main():
 
     # if we just created it, sync it, otherwise call the command
     if args.config.store.created:
-        sync(args)
-        if args.func != sync:
+        # TODO: classmethods here?
+        SyncCommand.run(args)
+        if args.func != SyncCommand.run:
             args.func(args)
     else:
         args.func(args)
