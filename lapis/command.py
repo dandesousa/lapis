@@ -112,27 +112,49 @@ class SyncCommand(Command):
             logger.info("no change in content -- metadata was not updated")
 
 
-class ListTagsCommand(Command):
+class ListCommand(Command):
+    @staticmethod
+    def args(parser):
+        parser.add_argument("pattern", nargs="?", default="", type=str, help="regex pattern to match againt the name")
+        parser.add_argument("-c", "--order_by_count", default=False, action="store_true", help="Orders by number of instances instead of name")
+
+
+    @staticmethod
+    def list_and_print(*args, **kwargs):
+        model = args[0]
+        config = kwargs["config"]
+        pattern = kwargs.get("pattern", "")
+        order_by_count = kwargs.get("order_by_count", False)
+
+        order_by = "content" if order_by_count else "name"
+        for obj in config.store.list(pattern, order_by=order_by, cls=model):
+            print("{} [{}]".format(obj.name, len(obj.content)))
+
+
+class ListTagsCommand(ListCommand):
     __command__ = "tags"
     __help__ = "lists existing tags on your pelican site"
 
     @staticmethod
-    def args(parser):
-        parser.add_argument("pattern", nargs="?", default="", type=str, help="regex pattern to match to find existing tags")
-        parser.add_argument("-c", "--order_by_count", default=False, action="store_true", help="Orders by number of instances instead of name")
+    def run(*args, **kwargs):
+        from lapis.models import Tag
+        ListCommand.list_and_print(Tag, *args, **kwargs)
+
+
+class ListAuthorsCommand(ListCommand):
+    __command__ = "authors"
+    __help__ = "lists existing authors on your pelican site"
 
     @staticmethod
     def run(*args, **kwargs):
-        config = kwargs["config"]
-        order_by_count = kwargs.get("order_by_count", False)
-        pattern = kwargs.get("pattern", "")
+        from lapis.models import Author
+        ListCommand.list_and_print(Author, *args, **kwargs)
 
-        logger.info("listing all the tags")
-        order_by = "name"
-        if order_by_count:
-            order_by = "content"
-        for tag in config.store.tags(pattern, order_by=order_by):
-            print("{} [{}]".format(tag.name, len(tag.content)))
+
+sub_command_classes = (FindCommand,
+                       SyncCommand,
+                       ListTagsCommand,
+                       ListAuthorsCommand)
 
 
 def _parse_args():
@@ -142,7 +164,6 @@ def _parse_args():
     parser.add_argument("-c", "--pelican_config", default=os.path.join(os.curdir, "pelicanconf.py"), help="path to the pelican configuration file used by blog (default: %(default)s)")
     parser.add_argument("--db_name", default=".lapisdb", help="The name of the lapis db file used for caching, stored in the pelican site's root directory (default: %(default)s)")
 
-    sub_command_classes = (FindCommand, SyncCommand, ListTagsCommand)
     # sub-commands
     subparsers = parser.add_subparsers()
     for command_cls in sub_command_classes:
