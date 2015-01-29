@@ -186,6 +186,9 @@ class Store(object):
         :param content_type enum: either article, page or None to filter by content type.
         :param tags list: returns content that is the logical conjuction of these tags.
         :param title str: title to search content by, produces a filter by case-insensitive match.
+        :param dates tuple: a tuple of containing either the date range or a single date. If a single
+            date is provided, it must match that date. If two dates are provided, must full in between
+            those dates. If None is provided, that bound is ignored.
 
         :yields object: The type of content object constrained by search parameters.
         """
@@ -219,6 +222,23 @@ class Store(object):
         if title:
             lc_title = title.lower()
             articles = articles.filter(Content.title.like("%{}%".format(lc_title)))
+
+        # filters by the date created, depending on what was passed
+        dates = kwargs.get("dates", None)
+        if dates:
+            from datetime import timedelta
+            fmt = "%Y-%m-%d"
+            if len(dates) == 1:
+                begin = dates[0]
+                end = begin + timedelta(days=1)
+                articles = articles.filter(Content.date_created.between(begin.strftime(fmt), end.strftime(fmt)))
+            elif len(dates) == 2:
+                before, after = dates
+                if after:
+                    after += timedelta(days=1)
+                    articles = articles.filter(Content.date_created >= after.strftime(fmt))
+                if before:
+                    articles = articles.filter(Content.date_created < before.strftime(fmt))
 
         for content in articles:
             yield content

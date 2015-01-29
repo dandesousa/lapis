@@ -58,6 +58,9 @@ class FindCommand(Command):
         parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
         parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
         parser.add_argument("-w", "--author", default=None, type=str, help="The author that the content must have")
+        parser.add_argument("--before", default=None, type=str, help="created before the the given date (format: YYYY-MM-DD)")
+        parser.add_argument("--after", default=None, type=str, help="created after the the given date (format: YYYY-MM-DD)")
+        parser.add_argument("--on", default=None, type=str, help="created on the the given date (format: YYYY-MM-DD)")
 
     @staticmethod
     def run(*args, **kwargs):
@@ -73,11 +76,34 @@ class FindCommand(Command):
         tags = kwargs.get("tags", [])
         title = kwargs.get("title", "")
 
+        try:
+            fmt = "%Y-%m-%d"
+
+            def parsed_date(s):
+                from datetime import datetime
+                if kwargs[s]:
+                    return datetime.strptime(kwargs[s], fmt)
+                return None
+            after_date = parsed_date("after")
+            before_date = parsed_date("before")
+            on_date = parsed_date("on")
+        except ValueError:
+            logger.error("invalid date format, must specify {}".format(fmt))
+            sys.exit(1)
+        else:
+            if on_date and (after_date or before_date):
+                logger.error("must specify either --on or (--before, --after) but not both.")
+                sys.exit(1)
+            elif after_date and before_date and after_date > before_date:
+                logger.error("value specified for --after should come prior to value in --before")
+                sys.exit(1)
+
+        dates = (before_date, after_date) if not on_date else (on_date,)
         logger.info("finding content that matches the criteria")
         content_type = None
         if articles:
             content_type = "article"
-        content_list = config.store.search(author=author, title=title, category=category, tags=tags, content_type=content_type)
+        content_list = config.store.search(author=author, title=title, category=category, tags=tags, content_type=content_type, dates=dates)
 
         def print_title(content):
             print(content)
