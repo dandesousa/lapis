@@ -252,8 +252,12 @@ def main():
     args.config.lapis_db_path = os.path.join(args.config.root_path, args.db_name)
 
     from lapis.store import Store
-    args.config.store = Store(args.config.lapis_db_path, args.config.content_path)
-    if args.config.store.schema_changed:
+    try:
+        args.config.store = Store(args.config.lapis_db_path, args.config.content_path)
+    except:
+        args.config.store = None
+
+    if not args.config.store or args.config.store.schema_changed:
         logger.info("migrating to new database format")
         del args.config.store
         os.remove(args.config.lapis_db_path)
