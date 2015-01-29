@@ -246,7 +246,7 @@ def main():
     args.config = type("Config", (object,), {})
 
     from pelican.settings import read_settings
-    args.config.settings = read_settings(args.pelican_config)
+    args.config.settings = read_settings(args.pelican_config, override={"SITEURL": os.path.abspath(os.curdir)})
     args.config.root_path = os.path.abspath(os.path.dirname(args.pelican_config))
     args.config.content_path = args.config.settings.get('PATH', args.config.root_path)
     args.config.lapis_db_path = os.path.join(args.config.root_path, args.db_name)
