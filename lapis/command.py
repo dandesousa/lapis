@@ -50,7 +50,6 @@ class FindCommand(Command):
     @staticmethod
     def args(parser):
         parser.add_argument("title", nargs="?", default=None, type=str, help="case-insensitive search by the title")
-        # TODO: path this will go away eventually
         parser.add_argument("--path", default=False, action="store_true", help="If given, shows the path instead of the title of the content")
         group = parser.add_mutually_exclusive_group()
         group.add_argument("-a", "--articles", default=False, action="store_true", help="Restricts the list of returned content to articles.")
@@ -210,8 +209,6 @@ def _parse_args():
     subparsers = parser.add_subparsers()
     for command_cls in sub_command_classes:
         command_cls.setup(subparsers)
-
-    # TODO: additional sub-commands go here
 
     args = parser.parse_args()
 
