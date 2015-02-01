@@ -4,7 +4,7 @@ A utility for managing content on your pelican blog. It indexes and makes your c
 
 **Lapis is not ready for public use**, until it is, see [pelican-shovel](https://github.com/dandesousa/pelican-shovel)
 
-Build Status: ![](https://travis-ci.org/dandesousa/Lapis.svg?branch=master)
+![](https://travis-ci.org/dandesousa/Lapis.svg?branch=master)
 
 ## Installation
 
