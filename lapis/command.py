@@ -31,6 +31,7 @@ class Command(object):
 
         # sets the default function to invoke
         parser.set_defaults(func=cls.run)
+        cls._parser = parser
 
     @staticmethod
     def args(parser):
@@ -137,6 +138,28 @@ class SyncCommand(Command):
             logger.info("no change in content -- metadata was not updated")
 
 
+class CreateCommand(Command):
+    __command__ = "create"
+    __help__ = "creates a piece of content."
+
+    @staticmethod
+    def args(parser):
+        parser.add_argument("content_type", choices=("page", "article", ), default=None, help="the type of content to create")
+        parser.add_argument("-n", "--title", type=str, default="Untitled", help="the title of the post or page to create (default: %(default)s)")
+        parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
+        parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
+        parser.add_argument("-a", "--author", default=None, type=str, help="The author that the content must have")
+
+    @staticmethod
+    def run(*args, **kwargs):
+        content_type = kwargs["content_type"]
+        title = kwargs["title"]
+        tags = kwargs["tags"]
+        category = kwargs["category"]
+        author = kwargs["author"]
+        print("create", content_type, title, tags, category, author)
+
+
 class ListCommand(Command):
     @staticmethod
     def args(parser):
@@ -195,7 +218,8 @@ sub_command_classes = (FindCommand,
                        SyncCommand,
                        ListTagsCommand,
                        ListAuthorsCommand,
-                       ListCategoriesCommand)
+                       ListCategoriesCommand,
+                       CreateCommand)
 
 
 def _parse_args():
