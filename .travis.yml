@@ -1,0 +1,12 @@
+language: python
+# supported python versions
+python:
+    - "3.4"
+
+# installation
+install:
+    - "pip install -r requirements.txt"
+
+# testing
+script:
+    - "./run_tests.sh"
