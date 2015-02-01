@@ -50,11 +50,8 @@ class FindCommand(Command):
 
     @staticmethod
     def args(parser):
+        parser.add_argument("content_type", choices=("page", "article", ), type=str, help="the content type that should be searched for")
         parser.add_argument("title", nargs="?", default=None, type=str, help="case-insensitive search by the title")
-        parser.add_argument("--path", default=False, action="store_true", help="If given, shows the path instead of the title of the content")
-        group = parser.add_mutually_exclusive_group()
-        group.add_argument("-a", "--articles", default=False, action="store_true", help="Restricts the list of returned content to articles.")
-        group.add_argument("-p", "--pages", default=False, action="store_true", help="Restricts the list of returned content to pages.")
         parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
         parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
         parser.add_argument("-w", "--author", default=None, type=str, help="The author that the content must have")
@@ -69,10 +66,8 @@ class FindCommand(Command):
         :param config Config:  TODO
         """
         config = kwargs["config"]
-        articles = kwargs.get("articles", False)
         author = kwargs.get("author", None)
         category = kwargs.get("category", None)
-        path = kwargs.get("path", False)
         tags = kwargs.get("tags", [])
         title = kwargs.get("title", "")
 
@@ -100,20 +95,13 @@ class FindCommand(Command):
 
         dates = (before_date, after_date) if not on_date else (on_date,)
         logger.info("finding content that matches the criteria")
-        content_type = None
-        if articles:
-            content_type = "article"
+        content_type = kwargs["content_type"]
         content_list = config.store.search(author=author, title=title, category=category, tags=tags, content_type=content_type, dates=dates)
 
         def print_title(content):
             print(content)
 
-        def print_path(content):
-            print(content.path)
-
         print_func = print_title
-        if path:
-            print_func = print_path
 
         for content in content_list:
             print_func(content)
