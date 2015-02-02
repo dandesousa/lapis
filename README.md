@@ -12,8 +12,8 @@ You should always get Lapis from the python package index using pip or another i
 
 ## Requirements
 
-Pelican >= 3.5
-SQLAlchemy
+* Pelican >= 3.5
+* SQLAlchemy
 
 ## Motivation & Goals
 
