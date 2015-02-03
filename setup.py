@@ -24,6 +24,7 @@ setup(
     url='http://github.com/dandesousa/lapis',
     license='CC0 1.0 Universal',
     platforms='any',
+    test_suite="tests.test_suite.test_all",
     packages=find_packages(),
     package_data={'': ['LICENSE'], 'lapis': []},
     install_requires=read('requirements.txt'),

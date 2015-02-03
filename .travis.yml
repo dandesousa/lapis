@@ -7,7 +7,12 @@ python:
 # installation
 install:
     - "pip install -r requirements.txt"
+    - "pip install coveralls"
 
 # testing
 script:
-    - "./run_tests.sh"
+    - "coverage run --source=lapis setup.py test"
+
+# code coverage
+after_success:
+    - coveralls
