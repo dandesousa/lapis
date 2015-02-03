@@ -11,8 +11,8 @@ install:
 
 # testing
 script:
-    - "coverage run --source=lapis setup.py test"
+    coverage run --source=lapis setup.py test
 
 # code coverage
 after_success:
-    - coveralls
+    coveralls -v
