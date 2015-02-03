@@ -12,6 +12,7 @@ install:
 # testing
 script:
     coverage run --source=lapis setup.py test
+    coverage report -m
 
 # code coverage
 after_success:
