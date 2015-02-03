@@ -1,4 +1,4 @@
-# Lapis
+# lapis
 
 A utility for managing content on your pelican blog. It indexes and makes your content searchable on the command-line.
 
