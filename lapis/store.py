@@ -19,9 +19,9 @@ class Store(object):
     content on a site. it is responsible for caching data and ensuring that it
     can be accessed quickly.
     """
-    __version__ = "00.00.001"
+    __version__ = "00.00.001dev"
 
-    def __init__(self, path, content_path):
+    def __init__(self, path):
         self.__created = False
         conn_str = "sqlite:///" + path
         self.__engine = create_engine(conn_str)
@@ -31,7 +31,7 @@ class Store(object):
 
         if self.site is None:
             self.__created = True
-            site = Site(content_path=content_path, version=Store.__version__)
+            site = Site(version=Store.__version__)
             self.__session.add(site)
             self.__session.commit()
 

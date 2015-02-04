@@ -263,7 +263,7 @@ def main():
 
     from lapis.store import Store
     try:
-        args.config.store = Store(args.config.lapis_db_path, args.config.content_path)
+        args.config.store = Store(args.config.lapis_db_path)
     except:
         args.config.store = None
 
@@ -271,7 +271,7 @@ def main():
         logger.info("migrating to new database format")
         del args.config.store
         os.remove(args.config.lapis_db_path)
-        args.config.store = Store(args.config.lapis_db_path, args.config.content_path)
+        args.config.store = Store(args.config.lapis_db_path)
 
     # if we just created it, sync it, otherwise call the command
     kwargs = {key: value for key, value in args.__dict__.items()}

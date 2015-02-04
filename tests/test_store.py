@@ -12,14 +12,12 @@ class TestStore(unittest.TestCase):
 
     def setUp(self):
         self.__sqlite_file = tempfile.NamedTemporaryFile()
-        self.__content_path = ""
-        self.__store = Store(self.__sqlite_file.name, self.__content_path)
+        self.__store = Store(self.__sqlite_file.name)
 
         from lapis.models import Tag
         self.__store.get_or_create(Tag, name="tag1")
         self.__store.get_or_create(Tag, name="tag2")
         self.__store.get_or_create(Tag, name="tag3")
-        self.__pelican_config = os.path.join(os.path.dirname(__file__), "samplesite", "pelicanconf.py")
 
     def tearDown(self):
         self.__sqlite_file.close()
@@ -27,16 +25,6 @@ class TestStore(unittest.TestCase):
     def test_store_delete(self):
         """tests that the session closes with no errors"""
         del self.__store
-
-    def test_sync(self):
-        from pelican.settings import read_settings
-        settings = read_settings(self.__pelican_config, override={"SITEURL": os.path.abspath(os.curdir)})
-        root_path = os.path.abspath(os.path.dirname(self.__pelican_config))
-        content_path = settings.get('PATH', root_path)
-        self.__store.sync(settings)
-
-        self.assertEqual(1, len(list(self.__store.search(content_type="page"))))
-        self.assertEqual(2, len(list(self.__store.search(content_type="article"))))
 
     def test_tag_list(self):
         """tests that all tags exist and that they are returned when the regular expression is right"""
@@ -59,3 +47,24 @@ class TestStore(unittest.TestCase):
         from lapis.models import Tag
         tags = list(self.__store.list("^fake_tag$", cls=Tag))
         self.assertFalse(tags)
+
+
+class TestStoreFromDisk(unittest.TestCase):
+    """tests that the store is properly synced from disk"""
+
+    def setUp(self):
+        from pelican.settings import read_settings
+        self.__sqlite_file = tempfile.NamedTemporaryFile()
+        self.__store = Store(self.__sqlite_file.name)
+        self.__pelican_config = os.path.join(os.path.dirname(__file__), "samplesite", "pelicanconf.py")
+        settings = read_settings(self.__pelican_config, override={"SITEURL": os.path.abspath(os.curdir)})
+        root_path = os.path.abspath(os.path.dirname(self.__pelican_config))
+        content_path = settings.get('PATH', root_path)
+        self.__store.sync(settings)
+
+    def tearDown(self):
+        pass
+
+    def test_search_cardinality(self):
+        self.assertEqual(1, len(list(self.__store.search(content_type="page"))))
+        self.assertEqual(2, len(list(self.__store.search(content_type="article"))))

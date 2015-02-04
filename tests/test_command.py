@@ -13,8 +13,7 @@ class TestStore(unittest.TestCase):
 
     def setUp(self):
         self.__sqlite_file = tempfile.NamedTemporaryFile()
-        self.__content_path = ""
-        self.__store = Store(self.__sqlite_file.name, self.__content_path)
+        self.__store = Store(self.__sqlite_file.name)
         self.__pelican_config = os.path.join(os.path.dirname(__file__), "samplesite", "pelicanconf.py")
         from pelican.settings import read_settings
         settings = read_settings(self.__pelican_config, override={"SITEURL": os.path.abspath(os.curdir)})

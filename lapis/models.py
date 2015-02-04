@@ -12,7 +12,6 @@ Base = declarative_base()
 class Site(Base):
     __tablename__ = 'site'
     id = Column(Integer, primary_key=True)
-    content_path = Column(String(PATH_LEN), nullable=False)
     version = Column(String(VERSION_LEN), nullable=False)
 
 
