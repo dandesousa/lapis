@@ -4,6 +4,8 @@ from sqlalchemy.orm import relationship
 # from sqlalchemy import create_engine
 
 PATH_LEN = 500
+VERSION_LEN = 50
+STATUS_LEN = 50
 Base = declarative_base()
 
 
@@ -11,7 +13,7 @@ class Site(Base):
     __tablename__ = 'site'
     id = Column(Integer, primary_key=True)
     content_path = Column(String(PATH_LEN), nullable=False)
-    version = Column(Integer, nullable=False)
+    version = Column(String(VERSION_LEN), nullable=False)
 
 
 content_tag_table = Table('content_tag', Base.metadata,
@@ -31,9 +33,10 @@ class Content(Base):
     author = relationship('Author', backref='content')
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship('Category', backref='content')
+    status = Column(String(STATUS_LEN), nullable=True)
 
     def __repr__(self):
-        return "Content(title='{}', date_created='{}', type='{}', author='{}', category='{}', tags='{}')".format(self.title, self.date_created, self.type, self.author, self.category, self.tags)
+        return "Content(title='{}', status='{}', date_created='{}', type='{}', author='{}', category='{}', tags='{}')".format(self.title, self.status, self.date_created, self.type, self.author, self.category, self.tags)
 
 
 class Tag(Base):

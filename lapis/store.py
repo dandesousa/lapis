@@ -19,7 +19,7 @@ class Store(object):
     content on a site. it is responsible for caching data and ensuring that it
     can be accessed quickly.
     """
-    __version__ = 1
+    __version__ = "00.00.001"
 
     def __init__(self, path, content_path):
         self.__created = False
@@ -94,8 +94,9 @@ class Store(object):
             author = self.get_or_create(Author, name=content.author.name)[0]
             category = self.get_or_create(Category, name=content.category.name)[0]
             content_type = self.__get_content_type(content)
+            status = content.status
             date_created = content.date
-            content = Content(source_path=content.source_path, date_created=date_created, title=content.title, tags=tags, type=content_type, author=author, category=category)
+            content = Content(source_path=content.source_path, status=status, date_created=date_created, title=content.title, tags=tags, type=content_type, author=author, category=category)
             self.__session.add(content)
             self.__session.commit()  # TODO: This might be sub-optimal, we can maybe commit after all the adds?
             updated = True

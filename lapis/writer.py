@@ -33,6 +33,7 @@ def write_content(content, dest_path, format=default_format, content_directory=C
     content_dict["category"] = content.category.name if content.category else ""
     content_dict["author"] = content.author.name if content.author else ""
     content_dict["date"] = content.date_created.strftime("%Y-%m-%d %H:%M") if content.date_created else ""
+    content_dict["status"] = content.status if hasattr(content, "status") else ""
     content_dict["slug"] = ""
     content_dict["summary"] = ""
 
