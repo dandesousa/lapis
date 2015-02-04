@@ -68,3 +68,14 @@ class TestStoreFromDisk(unittest.TestCase):
     def test_search_cardinality(self):
         self.assertEqual(1, len(list(self.__store.search(content_type="page"))))
         self.assertEqual(2, len(list(self.__store.search(content_type="article"))))
+
+    def test_search_date_range(self):
+        from datetime import datetime
+        fmt = "%Y%m%d"
+        dates = (datetime.strptime("20140304", fmt),)
+        self.assertEqual(0, len(list(self.__store.search(dates=dates))))
+        dates = (datetime.strptime("20140309", fmt),)
+        self.assertEqual(1, len(list(self.__store.search(dates=dates))))
+        dates = (datetime.strptime("20140309", fmt), datetime.strptime("20141212", fmt), )
+        self.assertEqual(2, len(list(self.__store.search(dates=dates, content_type="article"))))
+        self.assertEqual(1, len(list(self.__store.search(dates=dates, content_type="page"))))

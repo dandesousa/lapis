@@ -93,7 +93,7 @@ class FindCommand(Command):
                 logger.error("value specified for --after should come prior to value in --before")
                 sys.exit(1)
 
-        dates = (before_date, after_date) if not on_date else (on_date,)
+        dates = (after_date, before_date) if not on_date else (on_date,)
         logger.info("finding content that matches the criteria")
         content_type = kwargs["content_type"]
         content_list = config.store.search(author=author, title=title, category=category, tags=tags, content_type=content_type, dates=dates)

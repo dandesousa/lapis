@@ -233,11 +233,11 @@ class Store(object):
                 end = begin + timedelta(days=1)
                 articles = articles.filter(Content.date_created.between(begin.strftime(fmt), end.strftime(fmt)))
             elif len(dates) == 2:
-                before, after = dates
+                after, before = dates
                 if after:
-                    after += timedelta(days=1)
                     articles = articles.filter(Content.date_created >= after.strftime(fmt))
                 if before:
+                    before += timedelta(days=1)
                     articles = articles.filter(Content.date_created < before.strftime(fmt))
 
         for content in articles:
