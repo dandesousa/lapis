@@ -36,8 +36,7 @@ class Store(object):
             self.__session.commit()
 
     def __del__(self):
-        pass
-        # self.__db.close()
+        self.__session.close()
 
     @property
     def created(self):

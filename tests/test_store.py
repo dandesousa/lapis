@@ -22,6 +22,10 @@ class TestStore(unittest.TestCase):
     def tearDown(self):
         self.__sqlite_file.close()
 
+    def test_store_delete(self):
+        """tests that the session closes with no errors"""
+        del self.__store
+
     def test_tag_list(self):
         """tests that all tags exist and that they are returned when the regular expression is right"""
         from lapis.models import Tag
