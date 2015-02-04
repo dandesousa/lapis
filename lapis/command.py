@@ -157,6 +157,7 @@ class ListCommand(Command):
 
     @staticmethod
     def list_and_print(*args, **kwargs):
+        ostream = kwargs.get("ostream", sys.stdout)
         model = args[0]
         config = kwargs["config"]
         pattern = kwargs.get("pattern", "")
@@ -169,7 +170,7 @@ class ListCommand(Command):
             items.reverse()
 
         for obj in items:
-            print("{} [{}]".format(obj.name, len(obj.content)))
+            print("{} [{}]".format(obj.name, len(obj.content)), file=ostream)
 
 
 class ListTagsCommand(ListCommand):
