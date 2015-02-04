@@ -36,16 +36,19 @@ class TestWriter(unittest.TestCase):
         d = difflib.Differ()
         return list(d.compare(s1, s2))
 
-    def test_write_post(self):
-        content = Content(type="page", title="Hello World",
-                          author=Author(name="Mr. Greeting"),
-                          date_created=datetime.strptime("20150101", "%Y%m%d"))
-        expected_file = os.path.join(self.data_path, "expected-page.{}".format(self.fmt.name))
+    def write_and_compare(self, content, expected_file):
         with tempfile.NamedTemporaryFile("wt", encoding="utf-8") as f:
             write_content(content, f.name, format=self.fmt, content_directory=self.tempd_path)
             f.flush()
             diffs = self.__find_diffs(expected_file, f.name)
             self.assertTrue(filecmp.cmp(expected_file, f.name), "\n".join(diffs))
+
+    def test_write_post(self):
+        content = Content(type="page", title="Hello World",
+                          author=Author(name="Mr. Greeting"),
+                          date_created=datetime.strptime("20150101", "%Y%m%d"))
+        expected_file = os.path.join(self.data_path, "expected-page.{}".format(self.fmt.name))
+        self.write_and_compare(content, expected_file)
 
     def test_write_draft_article(self):
         content = Content(type="article", title="Hello World",
@@ -55,11 +58,7 @@ class TestWriter(unittest.TestCase):
                           author=Author(name="Mr. Greeting"),
                           category=Category(name="Greetings"))
         expected_file = os.path.join(self.data_path, "expected-draft-article.{}".format(self.fmt.name))
-        with tempfile.NamedTemporaryFile("wt", encoding="utf-8") as f:
-            write_content(content, f.name, format=self.fmt, content_directory=self.tempd_path)
-            f.flush()
-            diffs = self.__find_diffs(expected_file, f.name)
-            self.assertTrue(filecmp.cmp(expected_file, f.name), "\n".join(diffs))
+        self.write_and_compare(content, expected_file)
 
     def test_write_article(self):
         content = Content(type="article", title="Hello World",
@@ -68,11 +67,7 @@ class TestWriter(unittest.TestCase):
                           author=Author(name="Mr. Greeting"),
                           category=Category(name="Greetings"))
         expected_file = os.path.join(self.data_path, "expected-article.{}".format(self.fmt.name))
-        with tempfile.NamedTemporaryFile("wt", encoding="utf-8") as f:
-            write_content(content, f.name, format=self.fmt, content_directory=self.tempd_path)
-            f.flush()
-            diffs = self.__find_diffs(expected_file, f.name)
-            self.assertTrue(filecmp.cmp(expected_file, f.name), "\n".join(diffs))
+        self.write_and_compare(content, expected_file)
 
 
 class TestWriterMarkdown(TestWriter):
