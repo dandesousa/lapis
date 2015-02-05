@@ -6,14 +6,7 @@
 
 import os
 from lapis.formats import default_format
-
-
-def slugify(title):
-    """Simple function that turns a title into a slug
-
-    :param title str: Title of the content
-    """
-    return title.lower().replace(" ", "-")
+from pelican.utils import slugify
 
 
 def unique_path_and_slug(title, directory, format=default_format, append=0):

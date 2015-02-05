@@ -3,7 +3,6 @@
 
 """Entry point for the command line interface to Lapis"""
 
-
 from lapis.printer import CommandPrinter
 from argparse import ArgumentParser
 import logging
@@ -141,7 +140,8 @@ class CreateCommand(Command):
         tags = kwargs["tags"]
         category = kwargs["category"]
         author = kwargs["author"]
-        print("create", content_type, title, tags, category, author)
+
+        # get the destination path
 
 
 class ListCommand(Command):
