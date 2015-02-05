@@ -15,6 +15,10 @@ You should always get Lapis from the python package index using pip or another i
 * Pelican >= 3.5
 * SQLAlchemy
 
+## Contributions
+
+If you have a feature request, feel free to make a request in the issues section and open up a discussion. If you have already made a change and would like to incorporate it into lapis, submit a pull request and it will be reviewed and discussed. Contributions are greatly appreciated but never required!
+
 ## Motivation & Goals
 
 I started this project because I wanted a tool that would make certain tasks easier when managing my personal website. I wanted to be able to easily search pelican content and metadata, easily create and edit content without remembering the exact file path, manage resources outside of the traditional role of pelican (images, documents).
