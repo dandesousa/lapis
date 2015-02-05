@@ -78,7 +78,7 @@ class FindCommand(Command):
 
             def parsed_date(s):
                 from datetime import datetime
-                if kwargs[s]:
+                if s in kwargs and kwargs[s]:
                     return datetime.strptime(kwargs[s], fmt)
                 return None
             after_date = parsed_date("after")
