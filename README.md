@@ -14,7 +14,7 @@ You should always get Lapis from the python package index using pip or another i
 
 * Pelican >= 3.5
 * SQLAlchemy
-* Textcolor [for colored output]
+* termcolor [for colored output]
 
 ## Contributions
 
