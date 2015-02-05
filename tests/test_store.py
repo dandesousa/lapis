@@ -65,9 +65,17 @@ class TestStoreFromDisk(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_search_status(self):
+        self.assertEqual(2, len(list(self.__store.search(content_type="article", status="published"))))
+        self.assertEqual(1, len(list(self.__store.search(content_type="page", status="published"))))
+        self.assertEqual(3, len(list(self.__store.search(status="published"))))
+        self.assertEqual(1, len(list(self.__store.search(status="hidden"))))
+        self.assertEqual(1, len(list(self.__store.search(status="draft"))))
+
     def test_search_cardinality(self):
-        self.assertEqual(1, len(list(self.__store.search(content_type="page"))))
-        self.assertEqual(2, len(list(self.__store.search(content_type="article"))))
+        self.assertEqual(5, len(list(self.__store.search())))
+        self.assertEqual(2, len(list(self.__store.search(content_type="page"))))
+        self.assertEqual(3, len(list(self.__store.search(content_type="article"))))
 
     def test_search_date_range(self):
         from datetime import datetime

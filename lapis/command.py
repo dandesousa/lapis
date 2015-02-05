@@ -52,12 +52,13 @@ class FindCommand(Command):
     def args(parser):
         parser.add_argument("content_type", choices=("page", "article", ), type=str, help="the content type that should be searched for")
         parser.add_argument("title", nargs="?", default=None, type=str, help="case-insensitive search by the title")
+        parser.add_argument("-s", "--status", default=None, choices=("published", "hidden", "draft"), help="The status that the content must have.")
         parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
         parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
         parser.add_argument("-w", "--author", default=None, type=str, help="The author that the content must have")
-        parser.add_argument("--before", default=None, type=str, help="created before the the given date (format: YYYY-MM-DD)")
-        parser.add_argument("--after", default=None, type=str, help="created after the the given date (format: YYYY-MM-DD)")
-        parser.add_argument("--on", default=None, type=str, help="created on the the given date (format: YYYY-MM-DD)")
+        parser.add_argument("-b", "--before", default=None, type=str, help="created before the the given date (format: YYYY-MM-DD)")
+        parser.add_argument("-a", "--after", default=None, type=str, help="created after the the given date (format: YYYY-MM-DD)")
+        parser.add_argument("-d", "--on", default=None, type=str, help="created on the the given date (format: YYYY-MM-DD)")
 
     @staticmethod
     def run(*args, **kwargs):
@@ -70,6 +71,7 @@ class FindCommand(Command):
         category = kwargs.get("category", None)
         tags = kwargs.get("tags", [])
         title = kwargs.get("title", "")
+        status = kwargs.get("status", None)
 
         try:
             fmt = "%Y-%m-%d"
@@ -96,7 +98,7 @@ class FindCommand(Command):
         dates = (after_date, before_date) if not on_date else (on_date,)
         logger.info("finding content that matches the criteria")
         content_type = kwargs["content_type"]
-        content_list = config.store.search(author=author, title=title, category=category, tags=tags, content_type=content_type, dates=dates)
+        content_list = config.store.search(author=author, status=status, title=title, category=category, tags=tags, content_type=content_type, dates=dates)
 
         def print_title(content):
             print(content)

@@ -19,7 +19,7 @@ class Store(object):
     content on a site. it is responsible for caching data and ensuring that it
     can be accessed quickly.
     """
-    __version__ = "00.00.001dev"
+    __version__ = "00.00.001"
 
     def __init__(self, path):
         self.__created = False
@@ -135,12 +135,10 @@ class Store(object):
             if hasattr(g, 'generate_context'):
                 g.generate_context()
 
-        content_keys = ("articles", "pages")
         updated = False
 
-        for key in content_keys:
-            for content in context[key]:
-                updated = self.__sync_content(content) or updated
+        for filename, content in context['filenames'].items():
+            updated = self.__sync_content(content) or updated
 
         if self.schema_changed:
             site = self.site
@@ -182,6 +180,7 @@ class Store(object):
         generates properly constructed content objects that match those criteria.
 
         :param author str: the author that the content must match.
+        :param status str: the status that the content must match.
         :param category str: the category that the content must match.
         :param content_type enum: either article, page or None to filter by content type.
         :param tags list: returns content that is the logical conjuction of these tags.
@@ -201,6 +200,10 @@ class Store(object):
         author = kwargs.get("author", None)
         if author:
             articles = articles.filter(Content.author.has(Author.name == author))
+
+        status = kwargs.get("status", None)
+        if status:
+            articles = articles.filter(Content.status == status)
 
         # filters by the type of content
         content_type = kwargs.get("content_type", None)

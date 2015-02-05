@@ -34,6 +34,7 @@ class TestStore(unittest.TestCase):
         expected = """bird [1]
 cliff [1]
 crane [1]
+drafts [1]
 ocean [1]
 photography [2]
 shore [1]
