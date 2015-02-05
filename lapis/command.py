@@ -4,6 +4,7 @@
 """Entry point for the command line interface to Lapis"""
 
 
+from lapis.printer import CommandPrinter
 from argparse import ArgumentParser
 import logging
 import os
@@ -99,14 +100,7 @@ class FindCommand(Command):
         logger.info("finding content that matches the criteria")
         content_type = kwargs["content_type"]
         content_list = config.store.search(author=author, status=status, title=title, category=category, tags=tags, content_type=content_type, dates=dates)
-
-        def print_title(content):
-            print(content)
-
-        print_func = print_title
-
-        for content in content_list:
-            print_func(content)
+        config.printer.print_content(content_list)
 
 
 class SyncCommand(Command):
@@ -159,7 +153,6 @@ class ListCommand(Command):
 
     @staticmethod
     def list_and_print(*args, **kwargs):
-        ostream = kwargs.get("ostream", sys.stdout)
         model = args[0]
         config = kwargs["config"]
         pattern = kwargs.get("pattern", "")
@@ -170,9 +163,7 @@ class ListCommand(Command):
         if reverse:
             items = list(items)
             items.reverse()
-
-        for obj in items:
-            print("{} [{}]".format(obj.name, len(obj.content)), file=ostream)
+        config.printer.print_content_attributes(items)
 
 
 class ListTagsCommand(ListCommand):
@@ -262,6 +253,7 @@ def main():
     args.config.root_path = os.path.abspath(os.path.dirname(args.pelican_config))
     args.config.content_path = args.config.settings.get('PATH', args.config.root_path)
     args.config.lapis_db_path = os.path.join(args.config.root_path, args.db_name)
+    args.config.printer = CommandPrinter()
 
     from lapis.store import Store
     try:

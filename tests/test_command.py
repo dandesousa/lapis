@@ -7,6 +7,8 @@ import unittest
 import io
 from lapis.store import Store
 from argparse import ArgumentParser, ArgumentError
+from lapis.printer import CommandPrinter
+
 
 class TestStore(unittest.TestCase):
     """tests store related functions"""
@@ -30,6 +32,8 @@ class TestStore(unittest.TestCase):
         # bogus mock config obj
         self.config = type("Config", (object,), {})()
         self.config.store = self.__store
+        self.str_io = io.StringIO()
+        self.config.printer = CommandPrinter(stream=self.str_io)
 
     def tearDown(self):
         self.__sqlite_file.close()
@@ -52,15 +56,14 @@ class TestStore(unittest.TestCase):
 
     def test_list_tags_command(self):
         from lapis.command import ListTagsCommand
-        str_io = io.StringIO()
-        ListTagsCommand.run(ostream=str_io, config=self.config)
-        expected = """bird [1]
-cliff [1]
-crane [1]
-drafts [1]
-ocean [1]
-photography [2]
-shore [1]
-water [2]
+        ListTagsCommand.run(config=self.config)
+        expected = """[1] bird
+[1] cliff
+[1] crane
+[1] drafts
+[1] ocean
+[2] photography
+[1] shore
+[2] water
 """
-        self.assertEqual(expected, str_io.getvalue())
+        self.assertEqual(expected, self.str_io.getvalue())
