@@ -31,12 +31,17 @@ class TestStore(unittest.TestCase):
 
         # bogus mock config obj
         self.config = type("Config", (object,), {})()
+        self.config.settings = settings
         self.config.store = self.__store
         self.str_io = io.StringIO()
         self.config.printer = CommandPrinter(stream=self.str_io)
 
     def tearDown(self):
         self.__sqlite_file.close()
+
+    def test_exercise_sync(self):
+        from lapis.command import SyncCommand
+        SyncCommand.run(config=self.config)
 
     def test_exercise_find(self):
         from lapis.command import FindCommand
