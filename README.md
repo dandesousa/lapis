@@ -4,7 +4,7 @@ A utility for managing content on your pelican blog. It indexes and makes your c
 
 **Lapis is not ready for public use**, until it is, see [pelican-shovel](https://github.com/dandesousa/pelican-shovel)
 
-![](https://travis-ci.org/dandesousa/lapis.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/dandesousa/Lapis/badge.svg)](https://coveralls.io/r/dandesousa/Lapis)
+![](https://travis-ci.org/dandesousa/lapis.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/dandesousa/lapis/badge.svg)](https://coveralls.io/r/dandesousa/lapis)
 
 ## Installation
 
