@@ -49,6 +49,35 @@ class TestStore(unittest.TestCase):
         self.assertFalse(tags)
 
 
+class TestStoreFile(unittest.TestCase):
+    """tests that the store is properly synced from disk"""
+
+    def setUp(self):
+        from pelican.settings import read_settings
+        self.__sqlite_file = tempfile.NamedTemporaryFile()
+        self.__store = Store(self.__sqlite_file.name)
+        self.__pelican_config = os.path.join(os.path.dirname(__file__), "samplesite", "pelicanconf.py")
+        self.settings = read_settings(self.__pelican_config, override={"SITEURL": os.path.abspath(os.curdir)})
+
+    def test_article(self):
+        self.assertEqual(0, len(list(self.__store.search(content_type="article"))))
+        article_path = os.path.join(os.path.dirname(__file__), "samplesite", "content", "posts", "2014", "03", "foo.md")
+        self.__store.sync_file(self.settings, article_path, "article")
+        self.assertEqual(1, len(list(self.__store.search(content_type="article"))))
+        article = list(self.__store.search(content_type="article"))[0]
+        self.assertEqual("Foo", article.title)
+        self.assertEqual("Photography", article.category.name)
+
+    def test_page(self):
+        self.assertEqual(0, len(list(self.__store.search(content_type="page"))))
+        page_path = os.path.join(os.path.dirname(__file__), "samplesite", "content", "pages", "about.md")
+        self.__store.sync_file(self.settings, page_path, "page")
+        self.assertEqual(1, len(list(self.__store.search(content_type="page"))))
+        page = list(self.__store.search(content_type="page"))[0]
+        self.assertEqual("About", page.title)
+        self.assertEqual("Daniel DeSousa", page.author.name)
+
+
 class TestStoreFromDisk(unittest.TestCase):
     """tests that the store is properly synced from disk"""
 
@@ -58,8 +87,6 @@ class TestStoreFromDisk(unittest.TestCase):
         self.__store = Store(self.__sqlite_file.name)
         self.__pelican_config = os.path.join(os.path.dirname(__file__), "samplesite", "pelicanconf.py")
         settings = read_settings(self.__pelican_config, override={"SITEURL": os.path.abspath(os.curdir)})
-        root_path = os.path.abspath(os.path.dirname(self.__pelican_config))
-        content_path = settings.get('PATH', root_path)
         self.__store.sync(settings)
 
     def tearDown(self):

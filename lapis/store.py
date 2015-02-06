@@ -107,13 +107,25 @@ class Store(object):
 
         return updated
 
-    def sync(self, settings):
+    def sync_file(self, settings, filename, content_type):
+        """syncs a single file to the database."""
+        context = settings.copy()
+        from pelican.readers import Readers
+        from pelican.contents import Article, Page
+
+        readers = Readers(context)
+        content_class = Article if content_type == "article" else Page
+        content = readers.read_file(base_path=settings['PATH'], path=filename, content_class=content_class, context=context)
+        self.__sync_content(content)
+
+    def sync(self, settings, file=None):
         """syncs the stores metadata with actual filesystem metadata.
 
         this will attempt to search all available content, syncing un-tracked
         files and updating tracked files that have changed.
 
         :param settings: Settings dictionary from the pelican config
+        :param file: Restricts syncing to the file specification
         """
         from pelican.generators import PagesGenerator, ArticlesGenerator
         generator_classes = [PagesGenerator, ArticlesGenerator]

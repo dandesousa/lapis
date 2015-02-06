@@ -36,9 +36,18 @@ class TestWriter(unittest.TestCase):
         d = difflib.Differ()
         return list(d.compare(s1, s2))
 
-    def write_and_compare(self, content, expected_file):
+    def write_with_content(self, fn, slug, content, fmt):
+        write_content(fn, slug, content.type, format=fmt,
+                      title=content.title,
+                      author=content.author.name if content.author else "",
+                      category=content.category.name if content.category else "",
+                      tags=[tag.name for tag in content.tags] if content.tags else [],
+                      status=content.status,
+                      date_created=content.date_created)
+
+    def write_and_compare(self, content, slug, expected_file):
         with tempfile.NamedTemporaryFile("wt", encoding="utf-8") as f:
-            write_content(content, f.name, format=self.fmt, content_directory=self.tempd_path)
+            self.write_with_content(f.name, slug, content, self.fmt)
             f.flush()
             diffs = self.__find_diffs(expected_file, f.name)
             self.assertTrue(filecmp.cmp(expected_file, f.name), "\n".join(diffs))
@@ -48,7 +57,7 @@ class TestWriter(unittest.TestCase):
                           author=Author(name="Mr. Greeting"),
                           date_created=datetime.strptime("20150101", "%Y%m%d"))
         expected_file = os.path.join(self.data_path, "expected-page.{}".format(self.fmt.name))
-        self.write_and_compare(content, expected_file)
+        self.write_and_compare(content, "", expected_file)
 
     def test_write_draft_article(self):
         content = Content(type="article", title="Hello World",
@@ -58,7 +67,7 @@ class TestWriter(unittest.TestCase):
                           author=Author(name="Mr. Greeting"),
                           category=Category(name="Greetings"))
         expected_file = os.path.join(self.data_path, "expected-draft-article.{}".format(self.fmt.name))
-        self.write_and_compare(content, expected_file)
+        self.write_and_compare(content, "", expected_file)
 
     def test_write_article(self):
         content = Content(type="article", title="Hello World",
@@ -67,7 +76,7 @@ class TestWriter(unittest.TestCase):
                           author=Author(name="Mr. Greeting"),
                           category=Category(name="Greetings"))
         expected_file = os.path.join(self.data_path, "expected-article.{}".format(self.fmt.name))
-        self.write_and_compare(content, expected_file)
+        self.write_and_compare(content, "", expected_file)
 
 
 class TestWriterMarkdown(TestWriter):

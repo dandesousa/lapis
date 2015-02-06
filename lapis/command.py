@@ -3,6 +3,7 @@
 
 """Entry point for the command line interface to Lapis"""
 
+from lapis.editor import interface_for_editor
 from lapis.printer import CommandPrinter
 from argparse import ArgumentParser
 import logging
@@ -128,20 +129,29 @@ class CreateCommand(Command):
     @staticmethod
     def args(parser):
         parser.add_argument("content_type", choices=("page", "article", ), default=None, help="the type of content to create")
-        parser.add_argument("-n", "--title", type=str, default="Untitled", help="the title of the post or page to create (default: %(default)s)")
+        parser.add_argument("title", type=str, default=None, help="the title of the post or page to create")
         parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
         parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
         parser.add_argument("-a", "--author", default=None, type=str, help="The author that the content must have")
 
     @staticmethod
     def run(*args, **kwargs):
+        config = kwargs["config"]
         content_type = kwargs["content_type"]
         title = kwargs["title"]
         tags = kwargs["tags"]
         category = kwargs["category"]
         author = kwargs["author"]
 
-        # get the destination path
+        from lapis.writer import write_content
+        from lapis.slug import unique_path_and_slug
+        dest_dir = config.article_path if content_type == "article" else config.page_path
+        # TODO: pass in format
+        dest_path, slug = unique_path_and_slug(title, dest_dir)
+
+        write_content(dest_path, slug, content_type, title=title, tags=tags, category=category, author=author)
+        config.editor.open(dest_path)
+        config.store.sync_file(config.settings, dest_path, content_type)
 
 
 class ListCommand(Command):
@@ -208,6 +218,7 @@ def _parse_args():
     """parses the command arguments"""
     parser = ArgumentParser(prog="lapis", description="Utility for performing common pelican tasks.")
     parser.add_argument("-v", "--verbose", default=0, action="count", help="logging verbosity (more gives additional details)")
+    parser.add_argument("-e", "--editor", default="vim", help="the editor that you wish to use (default: %(default)s)")
     parser.add_argument("-c", "--pelican_config", default=os.path.join(os.curdir, "pelicanconf.py"), help="path to the pelican configuration file used by blog (default: %(default)s)")
     parser.add_argument("--db_name", default=".lapisdb", help="The name of the lapis db file used for caching, stored in the pelican site's root directory (default: %(default)s)")
 
@@ -252,7 +263,10 @@ def main():
     args.config.settings = read_settings(args.pelican_config, override={"SITEURL": os.path.abspath(os.curdir)})
     args.config.root_path = os.path.abspath(os.path.dirname(args.pelican_config))
     args.config.content_path = args.config.settings.get('PATH', args.config.root_path)
+    args.config.article_path = os.path.join(args.config.content_path, args.config.settings['ARTICLE_PATHS'][0])
+    args.config.page_path = os.path.join(args.config.content_path, args.config.settings['PAGE_PATHS'][0])
     args.config.lapis_db_path = os.path.join(args.config.root_path, args.db_name)
+    args.config.editor = interface_for_editor(args.editor)
     args.config.printer = CommandPrinter()
 
     from lapis.store import Store
