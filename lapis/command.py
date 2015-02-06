@@ -3,8 +3,8 @@
 
 """Entry point for the command line interface to Lapis"""
 
-from lapis.editor import interface_for_editor
-from lapis.printer import CommandPrinter
+from lapis.config import Config
+from lapis.store import Store
 from argparse import ArgumentParser
 import logging
 import os
@@ -218,9 +218,8 @@ def _parse_args():
     """parses the command arguments"""
     parser = ArgumentParser(prog="lapis", description="Utility for performing common pelican tasks.")
     parser.add_argument("-v", "--verbose", default=0, action="count", help="logging verbosity (more gives additional details)")
-    parser.add_argument("-e", "--editor", default="vim", help="the editor that you wish to use (default: %(default)s)")
-    parser.add_argument("-c", "--pelican_config", default=os.path.join(os.curdir, "pelicanconf.py"), help="path to the pelican configuration file used by blog (default: %(default)s)")
-    parser.add_argument("--db_name", default=".lapisdb", help="The name of the lapis db file used for caching, stored in the pelican site's root directory (default: %(default)s)")
+    parser.add_argument("--lapis_config", default=os.path.join(os.path.expanduser("~"), ".lapis.yml"), help="path to the users lapis config file (default: %(default)s)")
+    parser.add_argument("--pelican_config", default=os.path.join(os.curdir, "pelicanconf.py"), help="path to the pelican configuration file used by blog (default: %(default)s)")
 
     # sub-commands
     subparsers = parser.add_subparsers()
@@ -257,19 +256,7 @@ def main():
         logger.error("Expected pelican configuration file at '{}', setup config or override with -c, --pelican_config".format(args.pelican_config))
         sys.exit(1)
 
-    args.config = type("Config", (object,), {})
-
-    from pelican.settings import read_settings
-    args.config.settings = read_settings(args.pelican_config, override={"SITEURL": os.path.abspath(os.curdir)})
-    args.config.root_path = os.path.abspath(os.path.dirname(args.pelican_config))
-    args.config.content_path = args.config.settings.get('PATH', args.config.root_path)
-    args.config.article_path = os.path.join(args.config.content_path, args.config.settings['ARTICLE_PATHS'][0])
-    args.config.page_path = os.path.join(args.config.content_path, args.config.settings['PAGE_PATHS'][0])
-    args.config.lapis_db_path = os.path.join(args.config.root_path, args.db_name)
-    args.config.editor = interface_for_editor(args.editor)
-    args.config.printer = CommandPrinter()
-
-    from lapis.store import Store
+    args.config = Config(args.pelican_config, conf=args.lapis_config)
     try:
         args.config.store = Store(args.config.lapis_db_path)
     except:

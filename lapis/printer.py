@@ -73,15 +73,20 @@ class ContentAttributeFormatter(ColorFormatter):
 
 class CommandPrinter(object):
     """Class responsible for outputting command"""
-    def __init__(self, stream=sys.stdout):
+    def __init__(self, stream=sys.stdout, **kwargs):
         self.__stream = stream
+        self.__color_enabled = kwargs.get("color_enabled", False)
+
+    @property
+    def color_enabled(self):
+        return self.__color_enabled
 
     def print_content(self, content_list, **kwargs):
         """prints content on the provided stream"""
         for content in content_list:
-            print(ContentFormatter(content), file=self.__stream)
+            print(ContentFormatter(content, color_enabled=self.__color_enabled), file=self.__stream)
 
     def print_content_attributes(self, content_attributes, **kwargs):
         """prints content attributes like tags, author, etc"""
         for content_attr in content_attributes:
-            print(ContentAttributeFormatter(content_attr), file=self.__stream)
+            print(ContentAttributeFormatter(content_attr, color_enabled=self.__color_enabled), file=self.__stream)

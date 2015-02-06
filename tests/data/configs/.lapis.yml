@@ -1,0 +1,11 @@
+---
+# terminal color options
+termcolors:
+    # enables terminal colors (default: no)
+    enabled: yes
+
+# selects the editor (default: vim)
+editor: vim
+
+# selects default markup language (default: markdown)
+markup: markdown

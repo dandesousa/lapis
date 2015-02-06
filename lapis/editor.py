@@ -5,6 +5,9 @@
 from subprocess import call
 
 
+default_editor = "vim"
+
+
 class EditorInterface(object):
     __editor__ = None
 

@@ -5,9 +5,12 @@ import tempfile
 import os
 import unittest
 import io
-from lapis.store import Store
+import shutil
 from argparse import ArgumentParser, ArgumentError
+from datetime import datetime
+from lapis.store import Store
 from lapis.printer import CommandPrinter
+from lapis.editor import TrivialEditor
 
 
 class TestStore(unittest.TestCase):
@@ -35,9 +38,19 @@ class TestStore(unittest.TestCase):
         self.config.store = self.__store
         self.str_io = io.StringIO()
         self.config.printer = CommandPrinter(stream=self.str_io)
+        self.config.editor = TrivialEditor("echo")
+        self.__tmp_dir = tempfile.mkdtemp()
+        self.config.content_path = self.__tmp_dir
+        self.config.article_path = self.__tmp_dir
+        self.config.page_path = self.__tmp_dir
 
     def tearDown(self):
         self.__sqlite_file.close()
+        shutil.rmtree(self.__tmp_dir)
+
+    def test_exercise_create(self):
+        from lapis.command import CreateCommand
+        CreateCommand.run(config=self.config, content_type="page", title="test", author="", tags=[], category="", date=datetime.now())
 
     def test_exercise_sync(self):
         from lapis.command import SyncCommand
