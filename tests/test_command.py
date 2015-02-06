@@ -48,6 +48,17 @@ class TestStore(unittest.TestCase):
         self.__sqlite_file.close()
         shutil.rmtree(self.__tmp_dir)
 
+    def test_command_init(self):
+        from lapis.command import Command
+        with self.assertRaises(RuntimeError):
+            s = Command()
+
+        with self.assertRaises(NotImplementedError):
+            Command.args(None)
+
+        with self.assertRaises(NotImplementedError):
+            Command.run(None)
+
     def test_exercise_create(self):
         from lapis.command import CreateCommand
         CreateCommand.run(config=self.config, content_type="page", title="test", author="", tags=[], category="", date=datetime.now())
@@ -67,10 +78,21 @@ class TestStore(unittest.TestCase):
         with self.assertRaises(SystemExit):
             FindCommand.run(config=self.config, content_type="article", after="2014-01-10", before="2014-01-09")
 
+        with self.assertRaises(SystemExit):
+            FindCommand.run(config=self.config, content_type="article", after="2014-01-10", on="2014-01-09")
+
     def test_exercise_main(self):
         from lapis.command import main
         with self.assertRaises(SystemExit):
             main()
+
+    def test_exercise_list_authors_command(self):
+        from lapis.command import ListAuthorsCommand
+        ListAuthorsCommand.run(config=self.config)
+
+    def test_exercise_list_categories_command(self):
+        from lapis.command import ListCategoriesCommand
+        ListCategoriesCommand.run(config=self.config, reverse=True)
 
     def test_list_tags_command(self):
         from lapis.command import ListTagsCommand

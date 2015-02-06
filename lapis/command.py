@@ -37,12 +37,12 @@ class Command(object):
     @staticmethod
     def args(parser):
         """adds the arguments to the parser that should be invoked when the command is created, overrides should be staticmethods"""
-        raise NotImplemented
+        raise NotImplementedError
 
     @staticmethod
     def run(*args, **kwargs):
         """the command that should be run when the subcommand is invoked, overriddes should be staticmethods"""
-        raise NotImplemented
+        raise NotImplementedError
 
 
 class FindCommand(Command):
