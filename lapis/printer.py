@@ -3,7 +3,12 @@
 
 
 import sys
-import termcolor as tc
+import importlib
+
+try:
+    tc = importlib.import_module("termcolor")
+except ImportError:
+    tc = None
 
 
 class ColorFormatter(object):
@@ -11,10 +16,11 @@ class ColorFormatter(object):
         self.__color_enabled = color_enabled
 
     def get_color_text(self, value, color, attrs=[]):
-        if self.__color_enabled:
+        if self.__color_enabled and tc:
             return tc.colored(value, color, attrs=attrs)
         else:
             return value
+
 
 class ContentFormatter(ColorFormatter):
     """Returns string presentations of various attributes for content"""
