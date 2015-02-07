@@ -93,6 +93,8 @@ class TestCommand(unittest.TestCase):
         with self.assertRaises(SystemExit):
             args = type("Args", (object,), {})()
             args.pelican_config = "teasdasdla;sd"
+            args.config = self.config
+            args.config.lapis_db_path = self.__sqlite_file.name
             main(args)
 
         try:

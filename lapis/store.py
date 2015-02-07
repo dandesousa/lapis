@@ -77,7 +77,6 @@ class Store(object):
 
         :param content object: content class that should be updated in the database
         """
-        # TODO: This is wrong, we need to search by path
         updated = False
         db_content = self.__session.query(Content).filter(Content.source_path == content.source_path).first()
         if db_content is None:
@@ -92,8 +91,14 @@ class Store(object):
             self.__session.add(content)
             self.__session.commit()  # TODO: This might be sub-optimal, we can maybe commit after all the adds?
             updated = True
-        elif db_content.title != content.title:  # TODO: needs to update if any attribute or sub-attribute changes
+        else:
             db_content.title = content.title
+            tag_list = getattr(content, "tags", [])
+            db_content.tags = [self.get_or_create(Tag, name=tag.name)[0] for tag in tag_list]
+            db_content.author = self.get_or_create(Author, name=content.author.name)[0]
+            db_content.category = self.get_or_create(Category, name=content.category.name)[0]
+            db_content.date_created = content.date
+            db_content.status = content.status
             self.__session.commit()
             updated = True
 
