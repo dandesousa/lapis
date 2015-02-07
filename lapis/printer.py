@@ -56,7 +56,7 @@ class ContentFormatter(ColorFormatter):
         return self.get_color_text(self.__content.date_created.strftime("%Y-%m-%d"), self.date_created_color)
 
     def __str__(self):
-        return "{}.) [{}] [{}] [{}] {}".format(self.index, self.content_type_id, self.status, self.date_created, self.title)
+        return "{}.) | {} | {} | {} | {}".format(self.index, self.content_type_id, self.status, self.date_created, self.title)
 
 
 class ContentAttributeFormatter(ColorFormatter):
