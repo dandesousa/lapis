@@ -60,6 +60,7 @@ class FindCommand(Command):
         parser.add_argument("-b", "--before", default=None, type=str, help="created before the the given date (format: YYYY-MM-DD)")
         parser.add_argument("-a", "--after", default=None, type=str, help="created after the the given date (format: YYYY-MM-DD)")
         parser.add_argument("-d", "--on", default=None, type=str, help="created on the the given date (format: YYYY-MM-DD)")
+        parser.add_argument("-e", "--edit", default=None, type=int, help="Edits the Nth (1-len(content)) found content.")
 
     @staticmethod
     def run(*args, **kwargs):
@@ -73,6 +74,7 @@ class FindCommand(Command):
         tags = kwargs.get("tags", [])
         title = kwargs.get("title", "")
         status = kwargs.get("status", None)
+        edit_num = kwargs.get("edit", None)
 
         try:
             fmt = "%Y-%m-%d"
@@ -99,8 +101,23 @@ class FindCommand(Command):
         dates = (after_date, before_date) if not on_date else (on_date,)
         logger.info("finding content that matches the criteria")
         content_type = kwargs["content_type"]
-        content_list = config.store.search(author=author, status=status, title=title, category=category, tags=tags, content_type=content_type, dates=dates)
-        config.printer.print_content(content_list)
+        content_list = list(config.store.search(author=author, status=status, title=title, category=category, tags=tags, content_type=content_type, dates=dates))
+
+        if edit_num is not None:
+            valid_range = list(range(len(content_list)))
+            if edit_num-1 in valid_range:
+                content = content_list[edit_num-1]
+                config.editor.open(content.source_path)
+                config.store.sync_file(config.settings, content.source_path, content.type)
+            else:
+                if len(valid_range) == 1:
+                    range_str = "1"
+                else:
+                    range_str = "1-{}".format(valid_range[-1] + 1)
+                sys.stderr.write("{} is not in the range of available items found. Re-run with {}\n".format(edit_num, range_str))
+                sys.exit(1)
+        else:
+            config.printer.print_content(content_list)
 
 
 class SyncCommand(Command):
