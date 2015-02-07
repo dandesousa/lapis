@@ -28,4 +28,5 @@ I started this project because I wanted a tool that would make certain tasks eas
 
 ## License
 <a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a>
+<br>
 Lapis is licensed under CC0, or public domain in all jursidictions that permit it.
