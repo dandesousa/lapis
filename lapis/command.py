@@ -177,6 +177,7 @@ class ListCommand(Command):
         parser.add_argument("pattern", nargs="?", default="", type=str, help="regex pattern to match againt the name")
         parser.add_argument("-c", "--order_by_count", default=False, action="store_true", help="Orders by number of instances instead of name")
         parser.add_argument("-r", "--reverse", default=False, action="store_true", help="Reverses the standard order in which items are displayed")
+        parser.add_argument("-z", "--show_zero", default=False, action="store_true", help="Shows items which have a count of zero")
 
     @staticmethod
     def list_and_print(*args, **kwargs):
@@ -185,11 +186,17 @@ class ListCommand(Command):
         pattern = kwargs.get("pattern", "")
         order_by_count = kwargs.get("order_by_count", False)
         reverse = kwargs.get("reverse", False)
+        show_zero = kwargs.get("show_zero", False)
         order_by = "content" if order_by_count else "name"
-        items = config.store.list(pattern, order_by=order_by, cls=model)
+        items = list(config.store.list(pattern, order_by=order_by, cls=model))
+
+        # filters out zero elements
+        if not show_zero:
+            items = [item for item in items if len(item.content)]
+
         if reverse:
-            items = list(items)
             items.reverse()
+
         config.printer.print_content_attributes(items)
 
 
