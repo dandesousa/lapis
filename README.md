@@ -27,5 +27,5 @@ If you have a feature request, feel free to make a request in the issues section
 I started this project because I wanted a tool that would make certain tasks easier when managing my personal website. I wanted to be able to easily search pelican content and metadata, easily create and edit content without remembering the exact file path, manage resources outside of the traditional role of pelican (images, documents).
 
 ## License
-
+<a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a>
 Lapis is licensed under CC0, or public domain in all jursidictions that permit it.
