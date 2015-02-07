@@ -18,6 +18,10 @@ class TestConfig(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_author_name(self):
+        expected = self.config.settings['AUTHOR']
+        self.assertTrue(expected, self.config.author_name)
+
     def test_content_path(self):
         expected_path = os.path.join(self.content_path, "content")
         self.assertTrue(os.path.samefile(expected_path, self.config.content_path))

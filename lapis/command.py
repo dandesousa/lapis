@@ -159,6 +159,8 @@ class CreateCommand(Command):
         tags = kwargs["tags"]
         category = kwargs["category"]
         author = kwargs["author"]
+        if author is None:
+            author = config.author_name
 
         from lapis.writer import write_content
         from lapis.slug import unique_path_and_slug
@@ -281,7 +283,8 @@ def main(args=None):
         logger.error("Expected pelican configuration file at '{}', setup config or override with -c, --pelican_config".format(args.pelican_config))
         sys.exit(1)
 
-    args.config = Config(args.pelican_config, conf=args.lapis_config)
+    if not hasattr(args, "config"):
+        args.config = Config(args.pelican_config, conf=args.lapis_config)
     try:
         args.config.store = Store(args.config.lapis_db_path)
     except:

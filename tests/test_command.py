@@ -88,12 +88,10 @@ class TestCommand(unittest.TestCase):
     def test_exercise_main(self):
         from lapis.command import main
         with self.assertRaises(SystemExit):
-            main()
-
-        with self.assertRaises(SystemExit):
             args = type("Args", (object,), {})()
             args.pelican_config = "teasdasdla;sd"
             args.config = self.config
+            args.content_name = self.__tmp_dir
             args.config.lapis_db_path = self.__sqlite_file.name
             main(args)
 
@@ -102,6 +100,7 @@ class TestCommand(unittest.TestCase):
             args.pelican_config = self.__pelican_config
             args.lapis_config = "~/.asdasdasd.yml"
             args.config = self.config
+            args.content_name = self.__tmp_dir
             args.config.lapis_db_path = self.__sqlite_file.name
             main(args)
         except AttributeError:

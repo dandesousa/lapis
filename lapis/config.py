@@ -63,6 +63,10 @@ class Config(object):
         return os.path.join(self.content_path, self.settings['PAGE_PATHS'][0])
 
     @property
+    def author_name(self):
+        return self.settings['AUTHOR']
+
+    @property
     def lapis_db_path(self):
         return os.path.join(self.content_path, ".lapisdb")
 
