@@ -26,6 +26,12 @@ class TestConfig(unittest.TestCase):
         expected_path = os.path.join(self.content_path, "content")
         self.assertTrue(os.path.samefile(expected_path, self.config.content_path))
 
+    def test_preferred_article_path(self):
+        from datetime import datetime
+        d = datetime.now()
+        expected_path = os.path.join(self.content_path, "content", "posts", str(d.year), str(d.month), str(d.day))
+        self.assertTrue(expected_path, self.config.preferred_article_dir())
+
     def test_article_path(self):
         expected_path = os.path.join(self.content_path, "content")
         self.assertTrue(os.path.samefile(expected_path, self.config.article_path))

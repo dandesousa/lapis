@@ -169,7 +169,11 @@ class CreateCommand(Command):
 
         from lapis.writer import write_content
         from lapis.slug import unique_path_and_slug
-        dest_dir = config.article_path if content_type == "article" else config.page_path
+        dest_dir = config.preferred_article_dir() if content_type == "article" else config.page_path
+        try:
+            os.makedirs(dest_dir)
+        except FileExistsError:
+            pass
         # TODO: pass in format
         dest_path, slug = unique_path_and_slug(title, dest_dir)
 

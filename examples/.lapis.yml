@@ -9,3 +9,6 @@ editor: vim
 
 # selects default markup language (default: markdown)
 markup: markdown
+
+# preferred articles stub
+article_path: posts/{year}/{month}

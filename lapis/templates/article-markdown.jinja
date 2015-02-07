@@ -4,6 +4,7 @@ Tags: {{tags}}
 Category: {{category}}
 Slug: {{slug}}
 Author: {{author}}
+{%- if status %}
+Status: {{status}} {%- endif %}
 Summary: {{summary}}
-{% if status %}Status: {{status}}
-{% endif %}
+

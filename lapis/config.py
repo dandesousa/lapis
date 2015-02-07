@@ -8,7 +8,7 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-
+from datetime import datetime
 from lapis.printer import CommandPrinter
 
 
@@ -45,6 +45,9 @@ class Config(object):
         tcdata = data.get("termcolors", {})
         self.__tc_enabled = tcdata.get("enabled", "no") in ("yes", True, 1)
 
+        # paths
+        self.__preferred_article_path_format_str = data.get("article_path", "")
+
     @property
     def settings(self):
         """the pelican settings dictionary read from the pelicanconf.py"""
@@ -57,6 +60,16 @@ class Config(object):
     @property
     def article_path(self):
         return os.path.join(self.content_path, self.settings['ARTICLE_PATHS'][0])
+
+    def preferred_article_dir(self, date_created=None):
+        """returns the preferred directory for the article.
+
+        :param date_created datetime: the date of the articles creation
+        """
+        if date_created is None:
+            date_created = datetime.now()
+        article_path_fragment = self.__preferred_article_path_format_str.format(year=date_created.year, month=date_created.month, day=date_created.day)
+        return os.path.join(self.content_path, article_path_fragment)
 
     @property
     def page_path(self):
