@@ -19,6 +19,9 @@ class TestStore(unittest.TestCase):
         self.__store.get_or_create(Tag, name="tag2")
         self.__store.get_or_create(Tag, name="tag3")
 
+        from lapis.models import Category
+        self.__store.get_or_create(Category, name="category1")
+
     def tearDown(self):
         self.__sqlite_file.close()
 
@@ -47,6 +50,16 @@ class TestStore(unittest.TestCase):
         from lapis.models import Tag
         tags = list(self.__store.list("^fake_tag$", cls=Tag))
         self.assertFalse(tags)
+
+    def test_empty_categories(self):
+        from lapis.models import Category
+        categories = list(self.__store.list("^fake_category$", cls=Category))
+        self.assertFalse(categories)
+
+    def test_empty_authors(self):
+        from lapis.models import Author
+        actual = list(self.__store.list("^fake$", cls=Author))
+        self.assertFalse(actual)
 
 
 class TestStoreFile(unittest.TestCase):

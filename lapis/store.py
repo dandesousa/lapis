@@ -51,14 +51,6 @@ class Store(object):
     def site(self):
         return self.__session.query(Site).first()
 
-    @property
-    def __updated(self):
-        """determines if the contents of the directory were updated since last track
-
-        :rtype bool: True if the content directory was updated since store was updated
-        """
-        pass
-
     def get_or_create(self, model, defaults=None, **kwargs):
         instance = self.__session.query(model).filter_by(**kwargs).first()
         if instance:

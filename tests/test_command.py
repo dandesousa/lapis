@@ -81,6 +81,9 @@ class TestStore(unittest.TestCase):
         with self.assertRaises(SystemExit):
             FindCommand.run(config=self.config, content_type="article", after="2014-01-10", on="2014-01-09")
 
+        with self.assertRaises(SystemExit):
+            FindCommand.run(config=self.config, content_type="page", edit=30)
+
     def test_exercise_main(self):
         from lapis.command import main
         with self.assertRaises(SystemExit):
