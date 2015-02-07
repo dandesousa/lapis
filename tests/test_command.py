@@ -13,8 +13,9 @@ from lapis.printer import CommandPrinter
 from lapis.editor import TrivialEditor
 
 
-class TestStore(unittest.TestCase):
-    """tests store related functions"""
+class TestCommand(unittest.TestCase):
+    """tests unit test to test the command module, most of these are meant to exercise the function so we get coverage and no unexpected errors occur
+    though they are not particular thorough tests."""
 
     def setUp(self):
         self.__sqlite_file = tempfile.NamedTemporaryFile()
@@ -88,6 +89,21 @@ class TestStore(unittest.TestCase):
         from lapis.command import main
         with self.assertRaises(SystemExit):
             main()
+
+        with self.assertRaises(SystemExit):
+            args = type("Args", (object,), {})()
+            args.pelican_config = "teasdasdla;sd"
+            main(args)
+
+        try:
+            args = type("Args", (object,), {})()
+            args.pelican_config = self.__pelican_config
+            args.lapis_config = "~/.asdasdasd.yml"
+            args.config = self.config
+            args.config.lapis_db_path = self.__sqlite_file.name
+            main(args)
+        except AttributeError:
+            pass
 
     def test_exercise_list_authors_command(self):
         from lapis.command import ListAuthorsCommand

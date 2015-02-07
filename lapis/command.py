@@ -266,8 +266,9 @@ def invalid_command(args):
     args._parser.error("Must select a valid lapis command.")
 
 
-def main():
-    args = _parse_args()
+def main(args=None):
+    if args is None:
+        args = _parse_args()
 
     if not os.path.isfile(args.pelican_config):
         logger.error("Expected pelican configuration file at '{}', setup config or override with -c, --pelican_config".format(args.pelican_config))
