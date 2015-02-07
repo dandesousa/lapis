@@ -107,13 +107,18 @@ class FindCommand(Command):
             valid_range = list(range(len(content_list)))
             if edit_num-1 in valid_range:
                 content = content_list[edit_num-1]
-                config.editor.open(content.source_path)
-                config.store.sync_file(config.settings, content.source_path, content.type)
+                if os.path.exists(content.source_path):
+                    config.editor.open(content.source_path)
+                    config.store.sync_file(config.settings, content.source_path, content.type)
+                else:
+                    sys.stderr.write("It appears as though you manually removed the file at {}.\nRun 'lapis sync' to purge it and search again.\n".format(content.source_path))
+                    sys.exit(1)
             else:
                 if len(valid_range) == 1:
                     range_str = "1"
                 else:
                     range_str = "1-{}".format(valid_range[-1] + 1)
+                config.printer.print_content(content_list)
                 sys.stderr.write("{} is not in the range of available items found. Re-run with {}\n".format(edit_num, range_str))
                 sys.exit(1)
         else:

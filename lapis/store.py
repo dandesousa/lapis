@@ -4,6 +4,7 @@
 
 """defines the lapis store which is used to perform fast searches and lookups"""
 
+import os
 import logging
 from lapis.models import Base, Content, Site, Tag, Author, Category
 from sqlalchemy import create_engine
@@ -115,6 +116,19 @@ class Store(object):
         content = readers.read_file(base_path=settings['PATH'], path=filename, content_class=content_class, context=context)
         self.__sync_content(content)
 
+    def purge(self, source_paths=None):
+        """Will purge the database of any files which do not exist.
+
+        :param source_paths list: hint of source paths to skip when determining if they should be purged
+        """
+        if source_paths is None:
+            source_paths = []
+        content_to_check = self.__session.query(Content).filter(~Content.source_path.in_(source_paths))
+        content_to_remove = [content for content in content_to_check if not os.path.exists(content.source_path)]
+        for content in content_to_remove:
+            self.__session.delete(content)
+        self.__session.commit()
+
     def sync(self, settings, file=None):
         """syncs the stores metadata with actual filesystem metadata.
 
@@ -146,8 +160,13 @@ class Store(object):
 
         updated = False
 
+        source_paths = []
         for filename, content in context['filenames'].items():
-            updated = self.__sync_content(content) or updated
+            source_paths.append(content.source_path)
+            content_updated = self.__sync_content(content)
+            updated = content_updated or updated
+
+        self.purge(source_paths)
 
         if self.schema_changed:
             site = self.site

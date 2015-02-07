@@ -22,6 +22,9 @@ class TestStore(unittest.TestCase):
         from lapis.models import Category
         self.__store.get_or_create(Category, name="category1")
 
+        from lapis.models import Content
+        self.__store.get_or_create(Content, source_path="dfaiosdhoiad", title="To Be Deleted...", type="article")
+
     def tearDown(self):
         self.__sqlite_file.close()
 
@@ -60,6 +63,23 @@ class TestStore(unittest.TestCase):
         from lapis.models import Author
         actual = list(self.__store.list("^fake$", cls=Author))
         self.assertFalse(actual)
+
+    def test_purge(self):
+        expected = 1
+        content_list = list(self.__store.search(content_type="article"))
+        self.assertEqual(expected, len(content_list))
+
+        # test we can omit something from purge
+        source_paths = [content_list[0].source_path]
+        self.__store.purge(source_paths)
+        content_list = list(self.__store.search(content_type="article"))
+        self.assertEqual(expected, len(content_list))
+
+        # tests we can remove with purge
+        self.__store.purge()
+        content_list = list(self.__store.search(content_type="article"))
+        expected = 0
+        self.assertEqual(expected, len(content_list))
 
 
 class TestStoreFile(unittest.TestCase):
