@@ -6,6 +6,7 @@
 
 import os
 import logging
+from lapis.version import version
 from lapis.models import Base, Content, Site, Tag, Author, Category
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -20,7 +21,7 @@ class Store(object):
     content on a site. it is responsible for caching data and ensuring that it
     can be accessed quickly.
     """
-    __version__ = "0.1.0b"
+    __version__ = version
 
     def __init__(self, path):
         self.__created = False

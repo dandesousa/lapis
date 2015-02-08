@@ -3,6 +3,8 @@ Lapis
 """
 import os
 import sys
+sys.path.append(os.path.dirname(__file__))
+from lapis.version import version
 from setuptools import setup, find_packages
 
 if sys.argv[-1] == 'publish':
@@ -12,7 +14,7 @@ requires = ['pelican', 'SQLAlchemy', 'Markdown', 'PyYaml', 'termcolor']
 
 setup(
     name='lapis',
-    version='0.1.1b',
+    version=version,
     description='Perform pelican tasks easily',
     long_description=__doc__,
     author='Daniel DeSousa',
