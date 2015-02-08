@@ -3,9 +3,10 @@
 
 """Entry point for the command line interface to Lapis"""
 
+from argparse import ArgumentParser
+from datetime import datetime
 from lapis.config import Config
 from lapis.store import Store
-from argparse import ArgumentParser
 import logging
 import os
 import sys
@@ -80,7 +81,6 @@ class FindCommand(Command):
             fmt = "%Y-%m-%d"
 
             def parsed_date(s):
-                from datetime import datetime
                 if s in kwargs and kwargs[s]:
                     return datetime.strptime(kwargs[s], fmt)
                 return None
@@ -175,7 +175,7 @@ class CreateCommand(Command):
         except FileExistsError:
             pass
         # TODO: pass in format
-        dest_path, slug = unique_path_and_slug(title, dest_dir)
+        dest_path, slug = unique_path_and_slug(title, dest_dir, date=datetime.now())
 
         write_content(dest_path, slug, content_type, title=title, tags=tags, category=category, author=author)
         config.editor.open(dest_path)

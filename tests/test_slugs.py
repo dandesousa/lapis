@@ -22,6 +22,16 @@ class TestSlug(unittest.TestCase):
         slug = slugify("The World's Greatest Title")
         self.assertTrue("the-world's-greatest-title", slug)
 
+    def test_unique_slug_with_date(self):
+        from lapis.slug import unique_path_and_slug
+        from lapis.slug import slugify
+        from lapis.formats import default_format
+        from datetime import datetime
+        title = "My Unique Title"
+        path, slug = unique_path_and_slug(title, self.tempd_path, date=datetime.now())
+        expected_fn = "{}-{}.{}".format(datetime.now().strftime("%Y-%m-%d"), slugify(title), default_format.extension)
+        self.assertEqual(expected_fn, os.path.basename(path))
+
     def test_unique_path_and_slug_single(self):
         from lapis.slug import unique_path_and_slug
         from lapis.slug import slugify
