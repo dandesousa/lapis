@@ -63,6 +63,7 @@ class FindCommand(Command):
         parser.add_argument("-d", "--on", default=None, type=str, help="created on the the given date (format: YYYY-MM-DD)")
         parser.add_argument("-e", "--edit", default=None, type=int, help="Edits the Nth (1-len(content)) found content.")
         parser.add_argument("-p", "--path", default=None, type=int, help="Prints the source path of the Nth (1-len(content)) found content.")
+        parser.add_argument("--delete", default=None, type=int, help="Deletes the content located at the given source path.")
 
     @staticmethod
     def run(*args, **kwargs):
@@ -74,6 +75,7 @@ class FindCommand(Command):
         status = kwargs.get("status", None)
         edit_num = kwargs.get("edit", None)
         path_num = kwargs.get("path", None)
+        delete_num = kwargs.get("delete", None)
 
         try:
             fmt = "%Y-%m-%d"
@@ -108,6 +110,18 @@ class FindCommand(Command):
         def path_action(content):
             config.printer.print_location(content)
 
+        def delete_action(content):
+            while True:
+                config.printer.print_delete_confirmation(content)
+                choice = sys.stdin.readline().strip()
+                if choice == "y":
+                    os.remove(content.source_path)
+                    config.store.purge()
+                    config.printer.print_delete_acknowledgement(content)
+                    break
+                elif choice == "n":
+                    break
+
         priority_action = None
         content_num = None
         if edit_num is not None:
@@ -116,6 +130,9 @@ class FindCommand(Command):
         elif path_num is not None:
             priority_action = path_action
             content_num = path_num
+        elif delete_num is not None:
+            priority_action = delete_action
+            content_num = delete_num
 
         if priority_action:
             valid_range = list(range(len(content_list)))

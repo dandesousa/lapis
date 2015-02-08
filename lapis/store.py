@@ -122,8 +122,9 @@ class Store(object):
         :param source_paths list: hint of source paths to skip when determining if they should be purged
         """
         if source_paths is None:
-            source_paths = []
-        content_to_check = self.__session.query(Content).filter(~Content.source_path.in_(source_paths))
+            content_to_check = self.__session.query(Content)
+        else:
+            content_to_check = self.__session.query(Content).filter(~Content.source_path.in_(source_paths))
         content_to_remove = [content for content in content_to_check if not os.path.exists(content.source_path)]
         for content in content_to_remove:
             self.__session.delete(content)

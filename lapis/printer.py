@@ -88,6 +88,13 @@ class CommandPrinter(object):
     def color_enabled(self):
         return self.__color_enabled
 
+    def print_delete_confirmation(self, content):
+        print("Are you sure you want to delete {} at {} [y|n]: ".format(content.title, content.source_path), file=self.__stream, end=" ")
+        self.__stream.flush()
+
+    def print_delete_acknowledgement(self, content):
+        print("Deleted content at {}".format(content.source_path), file=self.__stream)
+
     def print_content(self, content_list, **kwargs):
         """prints content on the provided stream"""
         i = 0
@@ -96,7 +103,7 @@ class CommandPrinter(object):
             print(ContentFormatter(content, i, color_enabled=self.__color_enabled), file=self.__stream)
 
     def print_location(self, content):
-        print(content.source_path)
+        print(content.source_path, file=self.__stream)
 
     def print_content_attributes(self, content_attributes, **kwargs):
         """prints content attributes like tags, author, etc"""
