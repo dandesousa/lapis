@@ -27,6 +27,9 @@ class Config(object):
         # setup printer
         self.__printer = CommandPrinter(color_enabled=self.__tc_enabled)
 
+        # examples
+        self.__example_lapis_configuration_file = os.path.join(os.path.dirname(__file__), "examples", "lapis.yml")
+
     def __parse_conf_data(self, conf_fn):
         """parses the configuration data in the conf file and populates this configs attributes"""
         try:
@@ -56,6 +59,10 @@ class Config(object):
     @property
     def content_path(self):
         return self.settings['PATH']
+
+    @property
+    def example_lapis_configuration_file(self):
+        return self.__example_lapis_configuration_file
 
     @property
     def article_path(self):

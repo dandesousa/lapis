@@ -26,7 +26,7 @@ setup(
     platforms='any',
     test_suite="tests.test_suite.test_all",
     packages=find_packages(exclude=["tests"]),
-    package_data={'': ['LICENSE'], 'lapis': ["templates/*"]},
+    package_data={'': ['LICENSE'], 'lapis': ["templates/*", "examples/*"]},
     include_package_data=True,
     install_requires=read('requirements.txt'),
     zip_safe=False,

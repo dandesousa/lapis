@@ -46,6 +46,23 @@ class Command(object):
         raise NotImplementedError
 
 
+class NewConfigCommand(Command):
+    __command__ = "newconfig"
+    __help__ = "generates a new configuration file for the user"
+
+    @staticmethod
+    def args(parser):
+        parser.add_argument("-l", "--location", default=os.path.join(os.path.expanduser("~"), ".lapis.yml"), type=str, help="the location to generate the lapis configuration file (default: %(default)s)")
+
+    @staticmethod
+    def run(*args, **kwargs):
+        import shutil
+        config = kwargs["config"]
+        dst = kwargs.get("location", None)
+        shutil.copyfile(config.example_lapis_configuration_file, dst, follow_symlinks=True)
+        print("Your new lapis configuration file can be found at: {}".format(dst))
+
+
 class FindCommand(Command):
     __command__ = "find"
     __help__ = "finds articles, posts or other content"
@@ -272,11 +289,13 @@ class ListCategoriesCommand(ListCommand):
 
 
 sub_command_classes = (FindCommand,
-                       SyncCommand,
-                       ListTagsCommand,
+                       CreateCommand,
                        ListAuthorsCommand,
                        ListCategoriesCommand,
-                       CreateCommand)
+                       ListTagsCommand,
+                       SyncCommand,
+                       NewConfigCommand,
+                       )
 
 
 def _parse_args():
