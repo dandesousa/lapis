@@ -5,18 +5,14 @@ import os
 import sys
 from setuptools import setup, find_packages
 
-
 if sys.argv[-1] == 'publish':
     sys.exit(os.system('python setup.py sdist upload'))
 
-
-def read(fname):
-    with open(os.path.join(os.path.dirname(__file__), fname), encoding="utf-8") as f:
-        return f.read()
+requires = ['pelican', 'SQLAlchemy', 'Markdown', 'PyYaml', 'termcolor']
 
 setup(
     name='lapis',
-    version='0.1.0b',
+    version='0.1.1b',
     description='Perform pelican tasks easily',
     long_description=__doc__,
     author='Daniel DeSousa',
@@ -28,7 +24,7 @@ setup(
     packages=find_packages(exclude=["tests"]),
     package_data={'': ['LICENSE'], 'lapis': ["templates/*", "examples/*"]},
     include_package_data=True,
-    install_requires=read('requirements.txt'),
+    install_requires=requires,
     zip_safe=False,
     entry_points={'console_scripts': ['lapis = lapis.command:main']},
     classifiers=[
