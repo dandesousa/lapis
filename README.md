@@ -12,11 +12,18 @@ You should always get Lapis from the python package index using pip or another i
 
 ## Requirements
 
+* Python 3.3+
 * Pelican >= 3.5
 * SQLAlchemy
 * termcolor [for colored output]
 * PyYaml
 * Markdown
+
+### You don't support python 2.7.X?! Whaaaaa...
+
+Lapis was written initially to only support python 3. I investigated back-porting to python2.7 and in fact, would not be substantial work. However, I believe lapis is exactly the type of project that allows it to easily support 3 only. Because pelican blogs usually exist inside of virtualenvs containing only a personal website, there is typically not a high barrier to users to upgrade to python 3. Either you aren't touch python, in which case version is largely irrelevant, or you can easily upgrade to python 3 (pelican and most plugins support it).
+
+While python 2.7 support is extended to 2020, it seems silly to continue to support what is, for all intents and purposes, 5 year old, a deprecated version of the language. Instead I will use this as my tiny tiny tiny push to get people to start upgrading. Hopefully this is enough to convince you to do so. If not, you are free to fork lapis and create a python 2.7 compatible version.
 
 ## Contributions
 

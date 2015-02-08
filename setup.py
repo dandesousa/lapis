@@ -16,7 +16,7 @@ def read(fname):
 
 setup(
     name='lapis',
-    version='0.1.0',
+    version='0.1.0b',
     description='Perform pelican tasks easily',
     long_description=__doc__,
     author='Daniel DeSousa',
@@ -30,4 +30,9 @@ setup(
     install_requires=read('requirements.txt'),
     zip_safe=False,
     entry_points={'console_scripts': ['lapis = lapis.command:main']},
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+    ],
 )
