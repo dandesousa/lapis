@@ -7,7 +7,6 @@ site_author: Daniel DeSousa
 pages:
     - ['index.md', 'Introduction']
     - ['getting-started.md', 'User Guide', 'Getting Started']
-    - ['config.md', 'User Guide', '.lapis.yml Config']
     - ['find.md', 'Commands', 'find']
     - ['create.md', 'Commands', 'create']
     - ['tags.md', 'Commands', 'tags']
@@ -15,3 +14,4 @@ pages:
     - ['categories.md', 'Commands', 'categories']
     - ['sync.md', 'Commands', 'sync']
     - ['newconfig.md', 'Commands', 'newconfig']
+    - ['config.md', 'User Guide', '.lapis.yml Config']
