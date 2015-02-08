@@ -9,9 +9,9 @@ env:
 
 # installation
 install:
-    - "pip install -q pelican==$PELICAN_VERSION"
-    - "pip install -r requirements.txt"
-    - "pip install coveralls"
+    - pip install -q pelican==$PELICAN_VERSION
+    - pip install -r requirements.txt
+    - pip install coveralls
 
 # testing
 script:
