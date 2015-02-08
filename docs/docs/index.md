@@ -1,17 +1,29 @@
-# Welcome to MkDocs
+# Lapis 
 
-For full documentation visit [mkdocs.org](http://mkdocs.org).
+Project documentation for lapis.
 
-## Commands
+## Overview
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs help` - Print this help message.
+Lapis is a command line tool that automates common tasks of a pelican blog. As of the latest release it has the following features:
 
-## Project layout
+   * Indexes your existing pelican blog to make it searchable
+   * Searches your pelican blog by tag, category, title, status and more
+   * Edit, Locate and Delete pelican content directory from search queries
+   * Create new pelican content (articles and pages) from the command line
+   * List content attributes used on blog like tags, categories, authors, etc
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+## Installation
+
+You can always get the latest, most stable version of lapis from pip.
+
+```
+pip install lapis
+```
+
+## Bug Reports
+
+If anything doesn't work the way it should, please file a bug report at the [github issues page](https://github.com/dandesousa/lapis/issues).
+
+## License
+
+Lapis is is in the public domain and unencumbered by copyright.

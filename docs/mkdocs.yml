@@ -1,2 +1,17 @@
-site_name: My Docs
+site_name: Lapis - A Pelican Blog Utility
+repo_url: https://github.com/dandesousa/lapis
+dev_addr: 127.0.0.1:9000
 theme: readthedocs
+site_author: Daniel DeSousa
+
+pages:
+    - ['index.md', 'Introduction']
+    - ['user-guide/getting-started.md', 'User Guide', 'Getting Started']
+    - ['user-guide/config.md', 'User Guide', '.lapis.yml Config']
+    - ['user-guide/find.md', 'Commands', 'find']
+    - ['user-guide/create.md', 'Commands', 'create']
+    - ['user-guide/tags.md', 'Commands', 'tags']
+    - ['user-guide/authors.md', 'Commands', 'authors']
+    - ['user-guide/categories.md', 'Commands', 'categories']
+    - ['user-guide/sync.md', 'Commands', 'sync']
+    - ['user-guide/newconfig.md', 'Commands', 'newconfig']
