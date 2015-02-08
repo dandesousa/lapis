@@ -62,13 +62,10 @@ class FindCommand(Command):
         parser.add_argument("-a", "--after", default=None, type=str, help="created after the the given date (format: YYYY-MM-DD)")
         parser.add_argument("-d", "--on", default=None, type=str, help="created on the the given date (format: YYYY-MM-DD)")
         parser.add_argument("-e", "--edit", default=None, type=int, help="Edits the Nth (1-len(content)) found content.")
+        parser.add_argument("-p", "--path", default=None, type=int, help="Prints the source path of the Nth (1-len(content)) found content.")
 
     @staticmethod
     def run(*args, **kwargs):
-        """finds the content in the store that matches the criteria.
-
-        :param config Config:  TODO
-        """
         config = kwargs["config"]
         author = kwargs.get("author", None)
         category = kwargs.get("category", None)
@@ -76,6 +73,7 @@ class FindCommand(Command):
         title = kwargs.get("title", "")
         status = kwargs.get("status", None)
         edit_num = kwargs.get("edit", None)
+        path_num = kwargs.get("path", None)
 
         try:
             fmt = "%Y-%m-%d"
@@ -103,13 +101,28 @@ class FindCommand(Command):
         content_type = kwargs["content_type"]
         content_list = list(config.store.search(author=author, status=status, title=title, category=category, tags=tags, content_type=content_type, dates=dates))
 
+        def edit_action(content):
+            config.editor.open(content.source_path)
+            config.store.sync_file(config.settings, content.source_path, content.type)
+
+        def path_action(content):
+            config.printer.print_location(content)
+
+        priority_action = None
+        content_num = None
         if edit_num is not None:
+            priority_action = edit_action
+            content_num = edit_num
+        elif path_num is not None:
+            priority_action = path_action
+            content_num = path_num
+
+        if priority_action:
             valid_range = list(range(len(content_list)))
-            if edit_num-1 in valid_range:
-                content = content_list[edit_num-1]
+            if content_num-1 in valid_range:
+                content = content_list[content_num-1]
                 if os.path.exists(content.source_path):
-                    config.editor.open(content.source_path)
-                    config.store.sync_file(config.settings, content.source_path, content.type)
+                    priority_action(content)
                 else:
                     sys.stderr.write("It appears as though you manually removed the file at {}.\nRun 'lapis sync' to purge it and search again.\n".format(content.source_path))
                     sys.exit(1)
@@ -119,7 +132,7 @@ class FindCommand(Command):
                 else:
                     range_str = "1-{}".format(valid_range[-1] + 1)
                 config.printer.print_content(content_list)
-                sys.stderr.write("{} is not in the range of available items found. Re-run with {}\n".format(edit_num, range_str))
+                sys.stderr.write("{} is not in the range of available items found. Re-run with {}\n".format(content_num, range_str))
                 sys.exit(1)
         else:
             config.printer.print_content(content_list)

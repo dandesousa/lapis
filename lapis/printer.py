@@ -95,6 +95,9 @@ class CommandPrinter(object):
             i += 1
             print(ContentFormatter(content, i, color_enabled=self.__color_enabled), file=self.__stream)
 
+    def print_location(self, content):
+        print(content.source_path)
+
     def print_content_attributes(self, content_attributes, **kwargs):
         """prints content attributes like tags, author, etc"""
         for content_attr in content_attributes:
