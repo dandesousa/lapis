@@ -3,7 +3,7 @@ repo_url: https://github.com/dandesousa/lapis
 dev_addr: 127.0.0.1:9000
 theme: readthedocs
 site_author: Daniel DeSousa
-docs_dir: "."
+docs_dir: "docs/docs"
 pages:
     - ['index.md', 'Introduction']
     - ['getting-started.md', 'User Guide', 'Getting Started']
