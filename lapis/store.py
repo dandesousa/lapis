@@ -20,7 +20,7 @@ class Store(object):
     content on a site. it is responsible for caching data and ensuring that it
     can be accessed quickly.
     """
-    __version__ = "00.00.001"
+    __version__ = "0.1.0b"
 
     def __init__(self, path):
         self.__created = False
