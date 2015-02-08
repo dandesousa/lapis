@@ -6,9 +6,13 @@ A utility for managing content on your pelican blog. It indexes and makes your c
 
 ![](https://travis-ci.org/dandesousa/lapis.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/dandesousa/lapis/badge.svg)](https://coveralls.io/r/dandesousa/lapis) [![Documentation Status](https://readthedocs.org/projects/lapis/badge/?version=latest)](https://readthedocs.org/projects/lapis/?badge=latest)
 
-## Installation
+## Documentation
 
-You should always get Lapis from the python package index using pip or another installer. In the future instructions for getting it will be available here.
+[Complete documentation is available here](http://lapis.readthedocs.org/en/latest/)
+
+### Quick Links
+
+[Installation](http://lapis.readthedocs.org/en/latest/)
 
 ## Requirements
 
