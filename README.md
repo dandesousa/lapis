@@ -14,6 +14,10 @@ A utility for managing content on your pelican blog. It indexes and makes your c
 
 [Installation](http://lapis.readthedocs.org/en/latest/)
 
+```
+pip install --pre lapis
+```
+
 ## Requirements
 
 * Python 3.3+

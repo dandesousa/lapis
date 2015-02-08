@@ -14,10 +14,10 @@ Lapis is a command line tool that automates common tasks of a pelican blog. As o
 
 ## Installation
 
-You can always get the latest, most stable version of lapis from pip.
+You can always get the latest, most stable version of lapis from pip. Lapis is currently in alpha release status so you must explicitly opt into pre-release version.
 
 ```
-pip install lapis
+pip install --pre lapis
 ```
 
 ## Bug Reports
