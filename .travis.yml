@@ -5,18 +5,18 @@ python:
     - "3.4"
 
 env:
-    - PELICAN_VERISON=3.5.0
+    - PELICAN=3.5.0
 
 # installation
 install:
-    - pip install -q pelican==$PELICAN_VERSION
+    - pip install -q pelican=="$PELICAN"
     - pip install -r requirements.txt
     - pip install coveralls
 
 # testing
 script:
-    - "coverage run --source=lapis setup.py test"
-    - "coverage report -m"
+    - coverage run --source=lapis setup.py test
+    - coverage report -m
 
 # code coverage
 after_success:
