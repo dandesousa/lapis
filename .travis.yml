@@ -6,6 +6,7 @@ python:
 
 env:
     - PELICAN=3.5.0
+    - PELICAN=3.4.0
 
 # installation
 install:
