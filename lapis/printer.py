@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 
+import os
 import sys
 import importlib
 
@@ -89,7 +90,7 @@ class CommandPrinter(object):
         return self.__color_enabled
 
     def print_delete_confirmation(self, content):
-        print("Are you sure you want to delete {} at {} [y|n]: ".format(content.title, content.source_path), file=self.__stream, end=" ")
+        print("Are you sure you want to delete {} at {} [y|n]: ".format(content.title, os.path.relpath(content.source_path)), file=self.__stream, end=" ")
         self.__stream.flush()
 
     def print_delete_acknowledgement(self, content):

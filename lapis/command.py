@@ -362,3 +362,6 @@ def main(args=None):
             args.func(**kwargs)
     else:
         args.func(**kwargs)
+
+    if args.config.store is not None:
+        del args.config.store
