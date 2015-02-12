@@ -26,4 +26,4 @@ If anything doesn't work the way it should, please file a bug report at the [git
 
 ## License
 
-Lapis is is in the public domain and unencumbered by copyright.
+Lapis is in the public domain and unencumbered by copyright.
