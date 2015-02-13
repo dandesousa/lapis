@@ -4,7 +4,15 @@ A utility for managing content on your pelican blog. It indexes and makes your c
 
 **Lapis is in alpha pre-release state**. You can install it while it is being enhanced with additional features.
 
-![](https://travis-ci.org/dandesousa/lapis.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/dandesousa/lapis/badge.svg)](https://coveralls.io/r/dandesousa/lapis) [![Documentation Status](https://readthedocs.org/projects/lapis/badge/?version=latest)](https://readthedocs.org/projects/lapis/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/lapis/badge/?version=latest)](https://readthedocs.org/projects/lapis/?badge=latest)
+
+
+[![Build Status](https://travis-ci.org/dandesousa/lapis.svg?branch=master)](http://travis-ci.org/dandesousa/lapis) 
+[![Coverage Status](https://coveralls.io/repos/dandesousa/lapis/badge.svg)](https://coveralls.io/r/dandesousa/lapis)
+
+[![Development Status](https://pypip.in/status/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
+[![Wheel Status](https://pypip.in/wheel/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
+
 
 ## Documentation
 
