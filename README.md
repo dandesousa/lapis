@@ -6,11 +6,11 @@ A utility for managing content on your pelican blog. It indexes and makes your c
 
 [![Documentation Status](https://readthedocs.org/projects/lapis/badge/?version=latest)](https://readthedocs.org/projects/lapis/?badge=latest)
 
+[![Build Status](https://travis-ci.org/dandesousa/lapis.svg?branch=master)](http://travis-ci.org/dandesousa/lapis) 
+[![Coverage Status](https://coveralls.io/repos/dandesousa/lapis/badge.svg)](https://coveralls.io/r/dandesousa/lapis)
 
 [![Latest Version](https://pypip.in/version/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
 [![Development Status](https://pypip.in/status/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
-[![Build Status](https://travis-ci.org/dandesousa/lapis.svg?branch=master)](http://travis-ci.org/dandesousa/lapis) 
-[![Coverage Status](https://coveralls.io/repos/dandesousa/lapis/badge.svg)](https://coveralls.io/r/dandesousa/lapis)
 [![Wheel Status](https://pypip.in/wheel/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
 
 [![Supported Python implementations](https://pypip.in/implementation/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
