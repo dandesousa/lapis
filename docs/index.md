@@ -8,8 +8,8 @@ Lapis is a command line tool that automates common tasks of a pelican blog. As o
 
    * Indexes your existing pelican blog to make it searchable
    * Searches your pelican blog by tag, category, title, status and more
-   * Edit, Locate and Delete pelican content directory from search queries
-   * Create new pelican content (articles and pages) from the command line
+   * Edit, Locate and Delete pelican content directly from search queries
+   * Create pre-filled pelican content (articles and pages) from the command line
    * List content attributes used on blog like tags, categories, authors, etc
 
 ## Installation
