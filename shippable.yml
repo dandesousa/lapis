@@ -28,4 +28,4 @@ script:
     - python setup.py test
     - nosetests tests/test_*.py --with-xunit --xunit-file=shippable/testresults/nosetests.xml
     - coverage run --branch setup.py test
-    - covarage xml -o shippable/codecoverage/coverage.xml setup.py test
+    - coverage xml -o shippable/codecoverage/coverage.xml setup.py test
