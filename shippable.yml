@@ -1,0 +1,31 @@
+language: python
+
+python:
+    - 3.3
+    - 3.4
+
+build_image: shippableimages/ubuntu1404_python
+
+env:
+    - PELICAN=3.5.0
+
+before_install:
+    - mkdir -p $HOME/bldve
+    - virtualenv -p $SHIPPABLE_PYTHON $HOME/bldve
+    - source $HOME/bldve/bin/activate
+
+install:
+    - pip install -q pelican=="$PELICAN"
+    - pip install -r requirements.txt
+    - pip install coveralls
+    - pip install nose
+
+before_script:
+    mkdir -p shippable/testresults
+    mkdir -p shippable/codecoverage
+
+script:
+    - python setup.py test
+    - nosetests tests/test_*.py --with-xunit --xunit-file=shippable/testresults/nosetests.xml
+    - coverage run --branch setup.py test
+    - covarage xml -o shippable/codecoverage/coverage.xml setup.py test
