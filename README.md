@@ -6,6 +6,7 @@ A utility for managing content on your pelican blog. It indexes and makes your c
 
 [![Documentation Status](https://readthedocs.org/projects/lapis/badge/?version=latest)](https://readthedocs.org/projects/lapis/?badge=latest)
 
+[![Build Status](https://api.shippable.com/projects/54de655b5ab6cc13528beba0/badge?branchName=master)](https://app.shippable.com/projects/54de655b5ab6cc13528beba0/builds/latest)
 [![Build Status](https://travis-ci.org/dandesousa/lapis.svg?branch=master)](http://travis-ci.org/dandesousa/lapis) 
 [![Coverage Status](https://coveralls.io/repos/dandesousa/lapis/badge.svg)](https://coveralls.io/r/dandesousa/lapis)
 
