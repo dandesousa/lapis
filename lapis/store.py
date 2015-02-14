@@ -273,5 +273,6 @@ class Store(object):
                     before += timedelta(days=1)
                     articles = articles.filter(Content.date_created < before.strftime(fmt))
 
+        articles = articles.order_by(Content.date_created.desc())
         for content in articles:
             yield content
