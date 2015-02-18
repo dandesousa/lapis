@@ -19,6 +19,8 @@ A utility for managing content on your pelican blog. It indexes and makes your c
 
 [![Downloads](https://pypip.in/download/lapis/badge.svg?period=month)](https://pypi.python.org/pypi/lapis/)
 
+[![License](https://pypip.in/license/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
+
 ## Documentation
 
 [Complete documentation is available here](http://lapis.readthedocs.org/en/latest/)
