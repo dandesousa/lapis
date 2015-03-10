@@ -2,7 +2,7 @@
 
 A utility for managing content on your pelican blog. It indexes and makes your content searchable on the command-line.
 
-**Lapis is in alpha pre-release state**. You can install it while it is being enhanced with additional features.
+**Lapis is in beta -- stable enough for use but subject to change.**. You can install it while it is being enhanced with additional features.
 
 [![Documentation Status](https://readthedocs.org/projects/lapis/badge/?version=latest)](https://readthedocs.org/projects/lapis/?badge=latest)
 

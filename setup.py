@@ -1,5 +1,9 @@
 """\
-Lapis
+# Lapis
+
+A utility for managing your pelican blog on the command line.
+
+Please see https://github.com/dandesousa/lapis for more information.
 """
 import os
 import sys
@@ -30,7 +34,7 @@ setup(
     zip_safe=False,
     entry_points={'console_scripts': ['lapis = lapis.command:main']},
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 3 - Beta',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
