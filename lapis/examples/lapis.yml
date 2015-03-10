@@ -8,7 +8,9 @@ termcolors:
 editor: vim
 
 # selects default markup language (default: markdown)
-markup: markdown
+# uncomment desired default markup below
+# markup: markdown
+# markup: restructuredtext
 
 # preferred articles stub
 article_path: posts/{year}/{month}

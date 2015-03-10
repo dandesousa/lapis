@@ -7,7 +7,7 @@ import filecmp
 import tempfile
 import unittest
 from datetime import datetime
-from lapis.formats import default_format, markdown_description
+from lapis.formats import default_format, markdown_description, rst_description
 from lapis.models import Content, Tag, Author, Category
 from lapis.writer import write_content
 
@@ -82,5 +82,9 @@ class TestWriter(unittest.TestCase):
 class TestWriterMarkdown(TestWriter):
     __fmt__ = markdown_description
 
-# TODO: trivial to add other formats, here simply override the __fmt__ property
+
+class TestWriterRestructuredText(TestWriter):
+    __fmt__ = rst_description
+
+# trivial to add other formats, here simply override the __fmt__ property
 # and inherit, need to add rst.
