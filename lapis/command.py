@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from datetime import datetime
 from lapis.config import Config
 from lapis.store import Store
+from lapis.version import version
 import logging
 import os
 import sys
@@ -301,6 +302,7 @@ sub_command_classes = (FindCommand,
 def _parse_args():
     """parses the command arguments"""
     parser = ArgumentParser(prog="lapis", description="Utility for performing common pelican tasks.")
+    parser.add_argument("--version", default=False, action="store_true", help="print the current version of lapis")
     parser.add_argument("-v", "--verbose", default=0, action="count", help="logging verbosity (more gives additional details)")
     parser.add_argument("--lapis_config", default=os.path.join(os.path.expanduser("~"), ".lapis.yml"), help="path to the users lapis config file (default: %(default)s)")
     parser.add_argument("--pelican_config", default=os.path.join(os.curdir, "pelicanconf.py"), help="path to the pelican configuration file used by blog (default: %(default)s)")
@@ -311,6 +313,10 @@ def _parse_args():
         command_cls.setup(subparsers)
 
     args = parser.parse_args()
+
+    if args.version:
+        print(version)
+        sys.exit(0)
 
     if args.verbose == 1:
         level = logging.INFO
