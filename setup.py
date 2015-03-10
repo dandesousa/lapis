@@ -34,7 +34,7 @@ setup(
     zip_safe=False,
     entry_points={'console_scripts': ['lapis = lapis.command:main']},
     classifiers=[
-        'Development Status :: 3 - Beta',
+        'Development Status :: 4 - Beta',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
