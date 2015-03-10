@@ -39,7 +39,8 @@ The follow is a complete list of options for the lapis configuration file:
 
 ### **markup**
 
-    supported: (markdown)
+    supported: (markdown, restructuredtext)
+    default: markdown
     Name of the format you preferred to use.
 
 ### **article_path**
