@@ -11,6 +11,7 @@ from datetime import datetime
 from lapis.store import Store
 from lapis.printer import CommandPrinter
 from lapis.editor import TrivialEditor
+from lapis.config import Config
 
 
 class TestCommand(unittest.TestCase):
@@ -35,6 +36,7 @@ class TestCommand(unittest.TestCase):
 
         # bogus mock config obj
         self.config = type("Config", (object,), {})()
+        self.config.example_lapis_configuration_file = Config(self.__pelican_config).example_lapis_configuration_file
         self.config.settings = settings
         self.config.store = self.__store
         self.str_io = io.StringIO()
@@ -105,6 +107,22 @@ class TestCommand(unittest.TestCase):
             main(args)
         except AttributeError:
             pass
+
+    def test_parse_args(self):
+        from lapis.command import _parse_args
+        try:
+            _parse_args()
+            self.fail()
+        except SystemExit:
+            pass
+
+
+    def test_new_config_command(self):
+        from lapis.command import NewConfigCommand
+        import filecmp
+        tmp_loc = tempfile.NamedTemporaryFile()
+        NewConfigCommand.run(config=self.config, location=tmp_loc.name)
+        self.assertTrue(filecmp.cmp(tmp_loc.name, self.config.example_lapis_configuration_file))
 
     def test_exercise_list_authors_command(self):
         from lapis.command import ListAuthorsCommand
