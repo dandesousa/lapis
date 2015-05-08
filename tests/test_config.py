@@ -29,8 +29,15 @@ class TestConfig(unittest.TestCase):
     def test_preferred_article_path(self):
         from datetime import datetime
         d = datetime.now()
-        expected_path = os.path.join(self.content_path, "content", "posts", str(d.year), str(d.month), str(d.day))
-        self.assertTrue(expected_path, self.config.preferred_article_dir())
+        expected_path = os.path.join(self.content_path, "content", "posts", "uncategorized", str(d.year), str(d.month), str(d.day))
+        self.assertEqual(expected_path, self.config.preferred_article_dir())
+
+    def test_preferred_article_path_category(self):
+        from datetime import datetime
+        d = datetime.now()
+        category = "testcategory"
+        expected_path = os.path.join(self.content_path, "content", "posts", "testcategory", str(d.year), str(d.month), str(d.day))
+        self.assertEqual(expected_path, self.config.preferred_article_dir(category=category))
 
     def test_article_path(self):
         expected_path = os.path.join(self.content_path, "content")

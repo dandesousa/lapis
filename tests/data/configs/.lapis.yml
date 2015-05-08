@@ -10,4 +10,4 @@ editor: vim
 # selects default markup language (default: markdown)
 markup: markdown
 
-article_path: posts/{year}/{month}/{day}
+article_path: posts/{category}/{year}/{month}/{day}

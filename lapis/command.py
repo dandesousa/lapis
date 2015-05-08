@@ -217,13 +217,14 @@ class CreateCommand(Command):
 
         from lapis.writer import write_content
         from lapis.slug import unique_path_and_slug
-        dest_dir = config.preferred_article_dir() if content_type == "article" else config.page_path
+        date_created = datetime.now()
+        dest_dir = config.preferred_article_dir(date_created=date_created, category=category) if content_type == "article" else config.page_path
         try:
             os.makedirs(dest_dir)
         except FileExistsError:
             pass
         # TODO: pass in format
-        dest_path, slug = unique_path_and_slug(title, dest_dir, date=datetime.now())
+        dest_path, slug = unique_path_and_slug(title, dest_dir, date=date_created)
 
         write_content(dest_path, slug, content_type, title=title, tags=tags, category=category, author=author)
         config.editor.open(dest_path)

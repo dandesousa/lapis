@@ -68,14 +68,16 @@ class Config(object):
     def article_path(self):
         return os.path.join(self.content_path, self.settings['ARTICLE_PATHS'][0])
 
-    def preferred_article_dir(self, date_created=None):
+    def preferred_article_dir(self, date_created=None, category=None):
         """returns the preferred directory for the article.
 
         :param date_created datetime: the date of the articles creation
         """
         if date_created is None:
             date_created = datetime.now()
-        article_path_fragment = self.__preferred_article_path_format_str.format(year=date_created.year, month=date_created.month, day=date_created.day)
+        if category is None:
+            category = "uncategorized"
+        article_path_fragment = self.__preferred_article_path_format_str.format(year=date_created.year, month=date_created.month, day=date_created.day, category=category)
         return os.path.join(self.content_path, article_path_fragment)
 
     @property
