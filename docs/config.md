@@ -45,11 +45,11 @@ The follow is a complete list of options for the lapis configuration file:
 
 ### **article_path**
 
-    supported format specifiers: (year, month, day)
+    supported format specifiers: (year, month, day, category)
     Preferred path to the articles that lapis creates under the content directory.
 
 #### Example
 
 ```
-article_path: posts/{year}/{month}/{day}
+article_path: posts/{category}/{year}/{month}/{day}
 ```
