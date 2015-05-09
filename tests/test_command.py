@@ -46,6 +46,7 @@ class TestCommand(unittest.TestCase):
         self.config.content_path = self.__tmp_dir
         self.config.article_path = self.__tmp_dir
         self.config.page_path = self.__tmp_dir
+        self.config.preferred_article_dir = lambda date_created, category: os.path.join(self.config.content_path, category, str(date_created.year), str(date_created.month), str(date_created.day))
 
     def tearDown(self):
         self.__sqlite_file.close()
@@ -62,9 +63,22 @@ class TestCommand(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             Command.run(None)
 
-    def test_exercise_create(self):
+    def test_touch_create_uncategorized(self):
+        """Tests #46, that we create uncategorized file path when create is run"""
         from lapis.command import CreateCommand
-        CreateCommand.run(config=self.config, content_type="page", title="test", author="", tags=[], category="", date=datetime.now())
+        date_created = datetime.now()
+        expected_path = os.path.join(self.config.content_path, "uncategorized", str(date_created.year), str(date_created.month), str(date_created.day))
+        CreateCommand.run(config=self.config, content_type="article", title="test", tags=[], category=None, author="", date=date_created)
+        self.assertTrue(os.path.exists(expected_path))
+
+    def test_touch_create_category(self):
+        """Tests #46, that we create uncategorized file path when create is run"""
+        from lapis.command import CreateCommand
+        date_created = datetime.now()
+        category = "testcategory"
+        expected_path = os.path.join(self.config.content_path, category, str(date_created.year), str(date_created.month), str(date_created.day))
+        CreateCommand.run(config=self.config, content_type="article", title="test", tags=[], category=category, author="", date=date_created)
+        self.assertTrue(os.path.exists(expected_path))
 
     def test_exercise_sync(self):
         from lapis.command import SyncCommand
@@ -115,7 +129,6 @@ class TestCommand(unittest.TestCase):
             self.fail()
         except SystemExit:
             pass
-
 
     def test_new_config_command(self):
         from lapis.command import NewConfigCommand

@@ -201,7 +201,7 @@ class CreateCommand(Command):
         parser.add_argument("content_type", choices=("page", "article", ), default=None, help="the type of content to create")
         parser.add_argument("title", type=str, default=None, help="the title of the post or page to create")
         parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
-        parser.add_argument("-c", "--category", default=None, type=str, help="The category that the content must have")
+        parser.add_argument("-c", "--category", default="uncategorized", type=str, help="The category that the content must have")
         parser.add_argument("-a", "--author", default=None, type=str, help="The author that the content must have")
 
     @staticmethod
@@ -211,6 +211,8 @@ class CreateCommand(Command):
         title = kwargs["title"]
         tags = kwargs["tags"]
         category = kwargs["category"]
+        if category is None:
+            category = "uncategorized"
         author = kwargs["author"]
         if author is None:
             author = config.author_name
