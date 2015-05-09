@@ -46,7 +46,7 @@ pip install lapis
 
 Lapis was written initially to only support python 3. I investigated back-porting to python2.7 and in fact, would not be substantial work. However, I believe lapis is exactly the type of project that allows it to easily support 3 only. Because pelican blogs usually exist inside of virtualenvs containing only a personal website, there is typically not a high barrier to users to upgrade to python 3. Either you aren't touch python, in which case version is largely irrelevant, or you can easily upgrade to python 3 (pelican and most plugins support it).
 
-While python 2.7 support is extended to 2020, it seems silly to continue to support what is, for all intents and purposes, a 5 year old, deprecated version of the language. Instead I will use this as my *tiny tiny tiny* push to get people to start upgrading. Hopefully this is enough to convince you to do so. If not, you are free to fork lapis and create a python 2.7 compatible version.
+While python 2.7 support is extended to 2020, it seems silly to continue to support what is, for all intents and purposes, a 5 year old, deprecated version of the language. Instead I will use this as my *tiny tiny tiny* push to get people to start upgrading. Hopefully this is enough to convince you to do so for your pelican blog. If not, you are free to fork lapis and create a python 2.7 compatible version.
 
 ## Contributions
 

@@ -55,3 +55,8 @@ target/
 
 #Pelican
 *tests/samplesite/cache/*
+
+#Mkdocs
+site
+
+.DS_Store
