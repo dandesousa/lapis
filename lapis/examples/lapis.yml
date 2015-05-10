@@ -13,4 +13,7 @@ editor: vim
 # markup: restructuredtext
 
 # preferred articles stub
-article_path: posts/{year}/{month}
+article_path: "posts/{year}/{month}"
+# other common article_paths
+# article_path: "posts/{category}/{year}/{month}"
+# article_path: "{category}/{year}/{month}"
