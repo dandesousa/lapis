@@ -17,3 +17,6 @@ article_path: "posts/{year}/{month}"
 # other common article_paths
 # article_path: "posts/{category}/{year}/{month}"
 # article_path: "{category}/{year}/{month}"
+
+# custom templates
+# template_path: "path/to/templates"

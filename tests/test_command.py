@@ -38,6 +38,8 @@ class TestCommand(unittest.TestCase):
         self.config = type("Config", (object,), {})()
         self.config.example_lapis_configuration_file = Config(self.__pelican_config).example_lapis_configuration_file
         self.config.settings = settings
+        from lapis.writer import DEFAULT_TEMPLATE_PATH
+        self.config.template_path = DEFAULT_TEMPLATE_PATH
         self.config.store = self.__store
         self.str_io = io.StringIO()
         self.config.printer = CommandPrinter(stream=self.str_io)
@@ -68,7 +70,7 @@ class TestCommand(unittest.TestCase):
         from lapis.command import CreateCommand
         date_created = datetime.now()
         expected_path = os.path.join(self.config.content_path, "uncategorized", str(date_created.year), str(date_created.month), str(date_created.day))
-        CreateCommand.run(config=self.config, content_type="article", title="test", tags=[], category=None, author="", date=date_created)
+        CreateCommand.run(config=self.config, content_type="article", title="test", tags=[], category=None, author="", date=date_created, template="default")
         self.assertTrue(os.path.exists(expected_path))
 
     def test_touch_create_category(self):
@@ -77,7 +79,7 @@ class TestCommand(unittest.TestCase):
         date_created = datetime.now()
         category = "testcategory"
         expected_path = os.path.join(self.config.content_path, category, str(date_created.year), str(date_created.month), str(date_created.day))
-        CreateCommand.run(config=self.config, content_type="article", title="test", tags=[], category=category, author="", date=date_created)
+        CreateCommand.run(config=self.config, content_type="article", title="test", tags=[], category=category, author="", date=date_created, template="default")
         self.assertTrue(os.path.exists(expected_path))
 
     def test_exercise_sync(self):

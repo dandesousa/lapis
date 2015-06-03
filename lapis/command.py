@@ -203,6 +203,7 @@ class CreateCommand(Command):
         parser.add_argument("-t", "--tags", default=[], action="append", help="List of tags which the content must contain.")
         parser.add_argument("-c", "--category", default="uncategorized", type=str, help="The category that the content must have")
         parser.add_argument("-a", "--author", default=None, type=str, help="The author that the content must have")
+        parser.add_argument("-n", "--template", default="default", help="The name of the template to use (default: %(default)s)")
 
     @staticmethod
     def run(*args, **kwargs):
@@ -216,6 +217,7 @@ class CreateCommand(Command):
         author = kwargs["author"]
         if author is None:
             author = config.author_name
+        template = kwargs["template"]
 
         from lapis.writer import write_content
         from lapis.slug import unique_path_and_slug
@@ -225,10 +227,10 @@ class CreateCommand(Command):
             os.makedirs(dest_dir)
         except FileExistsError:
             pass
+
         # TODO: pass in format
         dest_path, slug = unique_path_and_slug(title, dest_dir, date=date_created)
-
-        write_content(dest_path, slug, content_type, title=title, tags=tags, category=category, author=author)
+        write_content(dest_path, slug, content_type, title=title, tags=tags, category=category, author=author, template=template, template_path=config.template_path)
         config.editor.open(dest_path)
         config.store.sync_file(config.settings, dest_path, content_type)
 

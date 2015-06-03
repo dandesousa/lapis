@@ -51,6 +51,9 @@ class Config(object):
         # paths
         self.__preferred_article_path_format_str = data.get("article_path", "")
 
+        default_template_path = os.path.join(os.path.dirname(__file__), "templates")
+        self.__template_path = data.get("template_path", default_template_path)
+
     @property
     def settings(self):
         """the pelican settings dictionary read from the pelicanconf.py"""
@@ -79,6 +82,12 @@ class Config(object):
             category = "uncategorized"
         article_path_fragment = self.__preferred_article_path_format_str.format(year=date_created.year, month=date_created.month, day=date_created.day, category=category)
         return os.path.join(self.content_path, article_path_fragment)
+
+    @property
+    def template_path(self):
+        """returns the path to the user directory containing custom templates.
+        """
+        return self.__template_path
 
     @property
     def page_path(self):

@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader
 from lapis.formats import default_format
 
 
-TEMPLATES_DIRECTORY = os.path.join(os.path.dirname(__file__), "templates")
+DEFAULT_TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "templates")
 
 
 def write_content(dest_path, slug, content_type, **kwargs):
@@ -29,9 +29,12 @@ def write_content(dest_path, slug, content_type, **kwargs):
     category = kwargs.get("category", "")
     date = kwargs.get("date_created", datetime.now())
     status = kwargs.get("status", "published")
+    template_path = kwargs.get("template_path", DEFAULT_TEMPLATE_PATH)
+    template = kwargs.get("template", "default")
 
-    template_file = "{}-{}.jinja".format(content_type, format.name)
-    env = Environment(loader=FileSystemLoader(TEMPLATES_DIRECTORY))
+    # locates the template that we should write using
+    template_file = "{}-{}-{}.jinja".format(content_type, format.name, template)
+    env = Environment(loader=FileSystemLoader(template_path))
     template = env.get_template(template_file)
 
     # creates the content dictionary
