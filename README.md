@@ -10,16 +10,16 @@ A utility for managing content on your pelican blog. It indexes and makes your c
 [![Build Status](https://travis-ci.org/dandesousa/lapis.svg?branch=master)](http://travis-ci.org/dandesousa/lapis) 
 [![Coverage Status](https://coveralls.io/repos/dandesousa/lapis/badge.svg)](https://coveralls.io/r/dandesousa/lapis)
 
-[![Latest Version](https://pypip.in/version/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
-[![Development Status](https://pypip.in/status/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
-[![Wheel Status](https://pypip.in/wheel/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
+[![Latest Version](https://img.shields.io/pypi/v/lapis.svg)](https://pypi.python.org/pypi/lapis/)
+[![Development Status](https://img.shields.io/pypi/status/lapis.svg)](https://pypi.python.org/pypi/lapis/)
+[![Wheel Status](https://img.shields.io/pypi/wheel/lapis.svg)](https://pypi.python.org/pypi/lapis/)
 
-[![Supported Python implementations](https://pypip.in/implementation/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
-[![Supported Python versions](https://pypip.in/py_versions/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
+[![Supported Python implementations](https://img.shields.io/pypi/implementation/lapis.svg)](https://pypi.python.org/pypi/lapis/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/lapis.svg)](https://pypi.python.org/pypi/lapis/)
 
-[![Downloads](https://pypip.in/download/lapis/badge.svg?period=month)](https://pypi.python.org/pypi/lapis/)
+[![Downloads](https://img.shields.io/pypi/dm/lapis.svg)](https://pypi.python.org/pypi/lapis/)
 
-[![License](https://pypip.in/license/lapis/badge.svg)](https://pypi.python.org/pypi/lapis/)
+[![License](https://img.shields.io/pypi/l/lapis.svg)](https://pypi.python.org/pypi/lapis/)
 
 ## Documentation
 
